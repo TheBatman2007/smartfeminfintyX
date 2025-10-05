@@ -1,4 +1,18 @@
-Smart FemX: AI-Powered BioHealth Menstrual Intelligence System — Smart FemX is an advanced AI-driven ecosystem that revolutionizes women’s menstrual and reproductive health by combining smart biosensors, AI prediction, and 3D protein visualization. The system includes a Smart Menstrual Cup that tracks biomarkers like pH, glucose, and protein levels, transmitting molecular data securely to an AI engine; a Smart Cleaning & Sterilization Case that uses UV-C light for hygiene while logging sterilization data; and an AI-powered app that analyzes health patterns, predicts hormonal imbalances or infections, and visualizes protein structures in 3D. Through its intelligent dashboard and virtual health assistant, Smart FemX provides real-time insights, emotional support, and community connectivity, empowering users with preventive, personalized care and early detection of reproductive health issues.
+🩸 Smart FemX: AI-Powered BioHealth Menstrual Intelligence System
+
+Smart FemX is an advanced AI-driven BioHealth ecosystem designed to revolutionize women’s menstrual and reproductive health. It integrates smart biosensors, AI prediction, and 3D protein visualization to transform menstrual data into a molecular-level diagnostic and predictive platform.
+
+The system includes:
+
+Smart Menstrual Cup – Monitors biomarkers like pH, glucose, and protein levels, transmitting molecular data securely to the AI engine.
+
+Smart Cleaning & Sterilization Case – Uses UV-C light for sterilization and logs hygiene data automatically.
+
+AI-Powered Application – Analyzes patterns, predicts hormonal imbalances or infections, and visualizes 3D protein structures for detailed health insights.
+
+Through its intelligent dashboard and AI virtual health assistant, Smart FemX delivers real-time analytics, emotional support, and community connectivity empowering users with preventive, personalized care and early detection of reproductive health issues.
+
+
 ![WhatsApp Image 2025-10-05 at 09 46 42_7d53d813](https://github.com/user-attachments/assets/36a2a534-a3a7-4a98-a4d1-400ae7c62e09)
 ![WhatsApp Image 2025-10-05 at 09 47 08_a282ec83](https://github.com/user-attachments/assets/488758a5-2e7d-4453-bdbc-4f3e8b0304c4)
 ![WhatsApp Image 2025-10-05 at 09 47 09_5739c6b7](https://github.com/user-attachments/assets/b124583f-d7ab-443c-8d48-be563a8e7798)

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artemis - Most Powerful Medical AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .container {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .wave-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyMCIgaGVpZ2h0PSIxMDgwIiB2aWV3Qm94PSIwIDAgMTkyMCAxMDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8ZyBvcGFjaXR5PSIwLjMiPgo8cGF0aCBkPSJNMCA1NDBDMTYwIDQyMCAzMjAgMzgwIDQ4MCA0MjBDNjQwIDQ2MCA4MDAgNTgwIDk2MCA1NDBDMTEyMCA1MDAgMTI4MCAzODAgMTQ0MCA0MjBDMTYwMCA0NjAgMTc2MCA1ODAgMTg0MCA2MDBMMTkyMCA2MjBWMTA4MEgxODQwQzE3NjAgMTA4MCAxNjAwIDEwODAgMTQ0MCAxMDgwQzEyODAgMTA4MCAxMTIwIDEwODAgOTYwIDEwODBDODAwIDEwODAgNjQwIDEwODAgNDgwIDEwODBDMzIwIDEwODAgMTYwIDEwODAgODAgMTA4MEgwVjU0MFoiIGZpbGw9InVybCgjZ3JhZGllbnQxKSIvPgo8L2c+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50MSIgeDE9IjAiIHkxPSI1NDAiIHgyPSIxOTIwIiB5Mj0iNTQwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiM0Mjg1RjQiLz4KPHN0b3Agb2Zmc2V0PSIwLjUiIHN0b3AtY29sb3I9IiM2NkE2RkYiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjNDI4NUY0Ii8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+Cg==');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.4;
+            z-index: 0;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 900px;
+        }
+
+        .logo-container {
+            margin-bottom: 3rem;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .company-name {
+            font-size: 0.875rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #8AB4F8;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .logo {
+            font-size: 5rem;
+            font-weight: 300;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, #4285F4 0%, #66A6FF 50%, #89CFF0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: #E8EAED;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #9AA0A6;
+            font-weight: 300;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 3rem;
+            background: linear-gradient(135deg, #4285F4 0%, #5B9BF8 100%);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(66, 133, 244, 0.4);
+            position: relative;
+            overflow: hidden;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .cta-button:hover:before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(66, 133, 244, 0.6);
+        }
+
+        .cta-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .feature {
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(66, 133, 244, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .feature-title {
+            font-size: 1rem;
+            color: #E8EAED;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-desc {
+            font-size: 0.9rem;
+            color: #9AA0A6;
+            font-weight: 300;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 3rem;
+            }
+            
+            .tagline {
+                font-size: 1.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="wave-bg"></div>
+        
+        <div class="content">
+            <div class="logo-container">
+                <div class="company-name">Real Time Protein 3D Model Generation</div>
+                <h1 class="logo">Artemis</h1>
+                <p class="tagline">Most Powerful Medical AI</p>
+                <p class="subtitle">Universal Metabolic Diagnostic System powered by advanced neural networks</p>
+            </div>
+
+            <a href="https://github.com/TgGaur/Universal-Metabolic-Diagnostic-System" target="_blank" class="cta-button">
+                <span>Explore Artemis</span>
+            </a>
+
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-title">Metabolic Analysis</div>
+                    <div class="feature-desc">Advanced diagnostic capabilities</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-title">AI-Powered</div>
+                    <div class="feature-desc">Deep learning algorithms</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-title">Real-time</div>
+                    <div class="feature-desc">Instant diagnosis results</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-title">Precision</div>
+                    <div class="feature-desc">Highly accurate predictions</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

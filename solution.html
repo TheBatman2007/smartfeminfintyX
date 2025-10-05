@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartFem Cup - Revolutionary Period Care</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #1557b0;
+            --secondary: #34a853;
+            --surface: #ffffff;
+            --background: #fafafa;
+            --on-surface: #202124;
+            --on-surface-variant: #5f6368;
+            --outline: #dadce0;
+            --smartfem-green: #4A7C59;
+            --smartfem-light: #6B9B7A;
+        }
+
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--background);
+            color: var(--on-surface);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Professional Navbar styles from index.html */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    backdrop-filter: blur(25px);
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(125, 184, 154, 0.1);
+    padding: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.02);
+    overflow: hidden;
+}
+.navbar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        rgba(125, 184, 154, 0.03) 0%, 
+        rgba(168, 201, 186, 0.02) 25%,
+        rgba(125, 184, 154, 0.03) 50%,
+        rgba(168, 201, 186, 0.02) 75%,
+        rgba(125, 184, 154, 0.03) 100%);
+    z-index: -1;
+}
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    height: 72px;
+}
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.logo-icon img {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 2px 4px rgba(125, 184, 154, 0.2));
+}
+.logo {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #1a3d2e;
+    letter-spacing: -0.5px;
+    font-family: 'Inter', sans-serif;
+}
+.nav-links {
+    display: flex;
+    gap: 0;
+    list-style: none;
+    align-items: center;
+}
+.nav-links li {
+    position: relative;
+}
+.nav-links a {
+    text-decoration: none;
+    color: #2d5e3e;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 1rem 1.5rem;
+    position: relative;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    margin: 0 0.2rem;
+    font-family: 'Inter', sans-serif;
+}
+.nav-links a:hover {
+    color: #1a3d2e;
+    background: rgba(125, 184, 154, 0.08);
+}
+.nav-links a.active {
+    color: #7db89a;
+    background: rgba(125, 184, 154, 0.1);
+}
+@media (max-width: 768px) {
+    .nav-container {
+        padding: 0 1rem;
+        height: 64px;
+    }
+    .nav-links {
+        display: none;
+    }
+    .logo {
+        font-size: 1.2rem;
+    }
+}
+
+        .hero-video {
+            margin-top: 64px;
+            background: linear-gradient(180deg, #000000 0%, #1a1a1a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 80px 32px;
+        }
+
+        .video-header {
+            text-align: center;
+            margin-bottom: 48px;
+            opacity: 0;
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .video-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .video-header h1 {
+            font-family: 'Google Sans', sans-serif;
+            font-size: clamp(40px, 6vw, 72px);
+            font-weight: 400;
+            line-height: 1.2;
+            color: #ffffff;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .video-header p {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
+        }
+
+        .video-wrapper::before {
+            content: '';
+            display: block;
+            padding-top: 56.25%;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .content-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 120px 32px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-family: 'Google Sans', sans-serif;
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 400;
+            line-height: 1.2;
+            color: var(--on-surface);
+            margin-bottom: 24px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-description {
+            font-size: 18px;
+            color: var(--on-surface-variant);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 32px;
+            margin-top: 64px;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid var(--outline);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            transform: translateY(-4px);
+            border-color: transparent;
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--smartfem-green), var(--smartfem-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            padding: 12px;
+        }
+
+        .feature-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: white;
+            fill: none;
+        }
+
+        .feature-title {
+            font-family: 'Google Sans', sans-serif;
+            font-size: 22px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: var(--on-surface);
+        }
+
+        .feature-description {
+            color: var(--on-surface-variant);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            padding-left: 28px;
+            position: relative;
+            color: var(--on-surface-variant);
+            font-size: 14px;
+        }
+
+        .feature-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 14px;
+            width: 16px;
+            height: 2px;
+            background: var(--secondary);
+        }
+
+        .stats-section {
+            background: var(--surface);
+            padding: 100px 32px;
+            margin: 80px 0;
+        }
+
+        .stats-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 64px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Google Sans', sans-serif;
+            font-size: 56px;
+            font-weight: 400;
+            color: var(--smartfem-green);
+            display: block;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: var(--on-surface-variant);
+        }
+
+        .quote-section {
+            max-width: 1000px;
+            margin: 120px auto;
+            padding: 80px 32px;
+            text-align: center;
+        }
+
+        .quote-mark {
+            font-size: 64px;
+            color: var(--primary);
+            opacity: 0.3;
+            line-height: 0.5;
+            margin-bottom: 24px;
+        }
+
+        .quote-text {
+            font-family: 'Google Sans', sans-serif;
+            font-size: clamp(24px, 4vw, 42px);
+            font-weight: 400;
+            line-height: 1.4;
+            color: var(--on-surface);
+            margin-bottom: 32px;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, var(--smartfem-green), var(--smartfem-light));
+            padding: 100px 32px;
+            text-align: center;
+            color: white;
+        }
+
+        .cta-content h2 {
+            font-family: 'Google Sans', sans-serif;
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 400;
+            margin-bottom: 24px;
+        }
+
+        .cta-content p {
+            font-size: 18px;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border-radius: 24px;
+            font-family: 'Google Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--smartfem-green);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        footer {
+            background: var(--on-surface);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 60px 32px;
+            text-align: center;
+        }
+
+        footer h3 {
+            font-family: 'Google Sans', sans-serif;
+            font-size: 20px;
+            font-weight: 400;
+            margin-bottom: 16px;
+            color: white;
+        }
+
+        footer p {
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .scroll-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: var(--primary);
+            z-index: 999;
+            transition: width 0.1s ease;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .video-container {
+                padding: 60px 20px;
+            }
+
+            .content-section {
+                padding: 80px 20px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 40px;
+            }
+        }
+
+        .tech-feature-flex {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 48px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 56px;
+        }
+
+        .tech-img {
+            flex: 1 1 420px;
+            min-width: 320px;
+            max-width: 600px;
+        }
+
+        .tech-main {
+            flex: 1 1 420px;
+            min-width: 320px;
+            max-width: 600px;
+        }
+
+        @media (max-width: 768px) {
+            .tech-feature-flex {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .tech-img {
+                max-width: 100%;
+            }
+
+            .tech-main {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Professional Navbar from index.html -->
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="logo-container">
+            <div class="logo-icon">
+                <img src="smartcup (2).png" alt="SmartFem Logo" width="40" height="40">
+            </div>
+            <div class="logo">SmartFem</div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="problem.html">Problem</a></li>
+            <li><a href="solution.html">Solution</a></li>
+            <li><a href="product/index.html">Product</a></li>
+            <li><a href="app/index.html">App Demo</a></li>
+            <li><a href="artmis.html">Artemis AI</a></li>
+            <li><a href="community.html">Community</a></li>
+        </ul>
+    </div>
+</nav>
+
+    <section class="hero-video" id="home">
+        <div class="video-container">
+            <div class="video-header">
+                <div class="video-badge">Full Pitch Presentation</div>
+                <h1>A New Era of Period Care</h1>
+                <p>Watch our complete vision for revolutionizing women's health through intelligent technology and sustainable design</p>
+            </div>
+            <div class="video-wrapper">
+                <iframe 
+                    src="https://player.cloudinary.com/embed/?cloud_name=dfyzauyqn&public_id=Smart_-_fem_final_pitch_zugiaf&profile=cld-default&autoplay=1&controls=1" 
+                    allow="autoplay; fullscreen; encrypted-media; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="section-header">
+            <div class="section-label">Impact by Numbers</div>
+            <h2 class="section-title">Making Real Change</h2>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="stat-number" data-target="10">0</span>
+                <span class="stat-label">Years of Use</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-target="10000">0</span>
+                <span class="stat-label">Pads Saved</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-target="120">0</span>
+                <span class="stat-label">Kg Plastic Avoided</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-target="99">0</span>
+                <span class="stat-label">Bacteria Eliminated</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section" id="features">
+        <div class="section-header">
+            <div class="section-label" style="color:#388e3c;">Technology</div>
+            <h2 class="section-title" style="font-family:'Google Sans','Inter',sans-serif;font-weight:700;color:#111;letter-spacing:-1px;">
+                Intelligent by Design
+            </h2>
+            <p class="section-description" style="color:#222;font-size:20px;">
+                SmartFem Cup combines cutting-edge technology with thoughtful design to provide comprehensive period care that's better for you and the planet
+            </p>
+        </div>
+        <div class="tech-feature-flex" style="display:flex;flex-wrap:wrap;gap:48px;align-items:center;justify-content:center;margin-bottom:56px;">
+            <!-- Left image, large and responsive -->
+            <div class="tech-img" style="flex:1 1 420px;min-width:320px;max-width:600px;">
+                <img src="ai1.png" alt="AI Model 1" style="width:100%;height:auto;object-fit:cover;border-radius:24px;box-shadow:0 4px 32px rgba(34,139,34,0.10);" />
+            </div>
+            <!-- Main text content -->
+            <div class="tech-main" style="flex:1 1 420px;min-width:320px;max-width:600px;">
+                <h3 style="font-size:2.2rem;font-family:'Google Sans','Inter',sans-serif;font-weight:700;color:#111;margin-bottom:24px;">
+                    Powered by Artemis AI
+                </h3>
+                <p style="font-size:1.25rem;line-height:1.7;color:#222;margin-bottom:18px;">
+                    Our health tracking is powered by <span style="color:#388e3c;font-weight:600;">Artemis AI</span>, a specialized medical intelligence system built on advanced protein folding architecture and fine-tuned with Med-Gemini 27B for comprehensive health analysis.
+                </p>
+                <div style="background:#f6fff8;border-left:4px solid #388e3c;padding:18px 24px;border-radius:8px;margin-bottom:18px;color:#222;">
+                    If we launch it, it will be the most powerful medical AI ever created.
+                </div>
+                <h4 style="font-size:1.4rem;font-family:'Google Sans','Inter',sans-serif;font-weight:700;color:#111;margin-bottom:12px;">
+                    Real-Time 3D Molecular Visualization
+                </h4>
+                <p style="font-size:1.1rem;line-height:1.7;color:#222;margin-bottom:0;">
+                    Unlike general AI chatbots (ChatGPT, Claude, Grok), Artemis AI can generate real-time 3D protein structures, DNA, and RNA visualizations directly in your health reports—providing unprecedented insights into your biology at the molecular level.
+                </p>
+                <div style="margin-top:12px;font-size:1rem;color:#388e3c;font-weight:600;">
+                    ARTEMIS AI is 100x more powerful than ChatGPT, Anthropic Claude, Grok, and DeepSeek in generating 3D models of proteins.
+                </div>
+            </div>
+            <!-- Right image, large and responsive -->
+            <div class="tech-img" style="flex:1 1 320px;min-width:220px;max-width:400px;">
+                <img src="ai2.png" alt=" Deep Think" style="width:100%;height:auto;object-fit:cover;border-radius:24px;box-shadow:0 4px 32px rgba(34,139,34,0.10);" />
+            </div>
+        </div>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Artemis AI Health Tracking</h3>
+                <p class="feature-description">Advanced machine learning algorithms monitor your cycle patterns and provide personalized insights for better health outcomes</p>
+                <ul class="feature-list">
+                    <li>Predictive cycle forecasting</li>
+                    <li>Real-time health monitoring</li>
+                    <li>Emergency alert system</li>
+                    <li>Pattern recognition analytics</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/>
+                        <line x1="12" y1="1" x2="12" y2="3"/>
+                        <line x1="12" y1="21" x2="12" y2="23"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        <line x1="1" y1="12" x2="3" y2="12"/>
+                        <line x1="21" y1="12" x2="23" y2="12"/>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">UV Self-Sterilization</h3>
+                <p class="feature-description">Medical-grade UV-C technology provides chemical-free sterilization, eliminating 99.9% of harmful bacteria in minutes</p>
+                <ul class="feature-list">
+                    <li>3-minute sterilization cycle</li>
+                    <li>Portable charging case</li>
+                    <li>Chemical-free cleaning</li>
+                    <li>Clinically validated process</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">TENS Pain Relief</h3>
+                <p class="feature-description">Drug-free pain management through transcutaneous electrical nerve stimulation technology</p>
+                <ul class="feature-list">
+                    <li>Adjustable intensity levels</li>
+                    <li>Instant relief activation</li>
+                    <li>Non-invasive technology</li>
+                    <li>Clinically proven method</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        <polyline points="7.5 4.21 12 6.81 16.5 4.21"/>
+                        <polyline points="7.5 19.79 7.5 14.6 3 12"/>
+                        <polyline points="21 12 16.5 14.6 16.5 19.79"/>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Sustainable Design</h3>
+                <p class="feature-description">Medical-grade silicone construction designed for 10+ years of use, dramatically reducing environmental impact</p>
+                <ul class="feature-list">
+                    <li>Biocompatible materials</li>
+                    <li>10+ year lifespan</li>
+                    <li>Biodegradable packaging</li>
+                    <li>Recycling program included</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Privacy First</h3>
+                <p class="feature-description">Your health data stays private with end-to-end encryption and offline-first architecture</p>
+                <ul class="feature-list">
+                    <li>Offline-first design</li>
+                    <li>Military-grade encryption</li>
+                    <li>No third-party access</li>
+                    <li>Complete user control</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Global Community</h3>
+                <p class="feature-description">Supporting women worldwide through accessibility features and community programs</p>
+                <ul class="feature-list">
+                    <li>Donate-a-Cup initiative</li>
+                    <li>Voice interface support</li>
+                    <li>Community network map</li>
+                    <li>Multi-language support</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="quote-section">
+        <div class="quote-mark">"</div>
+        <p class="quote-text">We don't just reuse — we reimagine period care for a sustainable future</p>
+    </section>
+
+    <section class="content-section" id="impact" style="background: var(--surface);">
+        <div class="section-header">
+            <div class="section-label">Our Mission</div>
+            <h2 class="section-title">Creating Lasting Impact</h2>
+            <p class="section-description">SmartFem Cup addresses critical challenges in women's health and environmental sustainability</p>
+        </div>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21.5 12c0 5.2-4.3 9.5-9.5 9.5S2.5 17.2 2.5 12 6.8 2.5 12 2.5s9.5 4.3 9.5 9.5z"/>
+                        <path d="M12 2.5c-2.5 0-4.5 4.3-4.5 9.5s2 9.5 4.5 9.5 4.5-4.3 4.5-9.5-2-9.5-4.5-9.5z"/>
+                        <path d="M2.5 12h19"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Environmental Crisis</h3>
+                <p class="feature-description">One woman uses over 10,000 disposable pads in her lifetime. This creates massive environmental impact through plastic waste, clogged water systems, and contaminated soil. SmartFem Cup eliminates this waste entirely.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        <circle cx="12" cy="12" r="1" fill="currentColor"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Health Revolution</h3>
+                <p class="feature-description">Poor menstrual hygiene leads to infections and health complications. Our AI-powered tracking helps detect irregularities early, potentially preventing serious health issues through continuous monitoring and pattern analysis.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Social Equality</h3>
+                <p class="feature-description">Period poverty affects millions globally. Our accessibility features, voice interface, and community programs break down barriers, reaching women in underserved regions and creating lasting social impact.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Join the Revolution</h2>
+            <p>Experience the future of period care with SmartFem Cup</p>
+            <div class="btn-group">
+                <a href="https://thebatman2007.github.io/Smart-Menstrual-Cup/main.html" class="btn btn-primary">Explore Product</a>
+                <a href="https://thebatman2007.github.io/Smart-Fem/" class="btn btn-secondary">Try App Demo</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <h3>SmartFem Cup</h3>
+        <p>Revolutionizing period care with intelligence, sustainability, and empowerment.</p>
+        <p style="margin-top: 32px; opacity: 0.6;">© 2025 SmartFem. Empowering women, protecting the planet.</p>
+    </footer>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('scrollProgress').style.width = scrolled + '%';
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    
+                    document.querySelectorAll('.nav-links a').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    if (this.classList.contains('nav-links')) {
+                        this.classList.add('active');
+                    }
+                }
+            });
+        });
+
+        // Fix navbar active bar
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Only update active for internal links
+            if (this.getAttribute('href').startsWith('#') || this.getAttribute('href').endsWith('.html')) {
+                document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            }
+        });
+    });
+    // Optionally, set active on page load if hash matches
+    window.addEventListener('DOMContentLoaded', () => {
+        const hash = window.location.hash;
+        if (hash) {
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === hash) {
+                    link.classList.add('active');
+                }
+            });
+        }
+    });
+
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 100);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        const animateCounter = (element) => {
+            const target = parseInt(element.getAttribute('data-target'));
+            const duration = 2000;
+            const increment = target / (duration / 16);
+            let current = 0;
+
+            const updateCounter = () => {
+                current += increment;
+                if (current < target) {
+                    element.textContent = Math.floor(current) + (target >= 1000 ? '+' : '');
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    element.textContent = target + (target >= 1000 ? '+' : '');
+                }
+            };
+            updateCounter();
+        };
+
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumber = entry.target.querySelector('.stat-number');
+                    animateCounter(statNumber);
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.stat-item').forEach(item => {
+            statsObserver.observe(item);
+        });
+    </script>
+</body>
+</html>

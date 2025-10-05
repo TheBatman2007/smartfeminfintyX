@@ -1,0 +1,2179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Fem Infinity X</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon-912.png" type="image/x-icon">
+    <meta name="theme-color" content="#e28ab7">
+
+    <style>
+        :root {
+            --primary: #ff6b9c;
+            --primary-light: #ffa7c8;
+            --primary-dark: #ff4081;
+            --leaf-green: #4CAF50;
+            --nature-brown: #795548;
+            --sky-blue: #87CEEB;
+            --background: #f9f0f5;
+            --text: #333333;
+            --danger: #ff4b4b;
+            --success: #4bff9f;
+            --warning: #ffcb4b;
+            --grey: #e0e0e0;
+            --white: #ffffff;
+            --secondary: #5c61f5; /* Add this line - it was missing */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            max-width: 450px;
+            margin: 0 auto;
+            background: linear-gradient(
+                135deg, 
+                rgba(255, 255, 255, 0.95), 
+                rgba(255, 255, 255, 0.85)
+            );
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .page {
+            padding: 20px 24px;
+            display: none;
+            height: calc(100vh - 120px); /* Changed from 90px to 120px to account for bottom nav */
+            padding-bottom: 70px; /* Add padding at bottom to prevent content being hidden */
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.98));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 20px 24px;
+            border-bottom-left-radius: 25px;
+            border-bottom-right-radius: 25px;
+            box-shadow: 
+                0 5px 15px rgba(226, 138, 183, 0.2),
+                0 -10px 20px rgba(255, 255, 255, 0.1) inset;
+            color: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .voice-assistant {
+            background-color: var(--primary-light);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .voice-assistant:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(226, 138, 183, 0.1);
+            padding: 15px 0 12px;
+            display: flex;
+            justify-content: space-around;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            max-width: 450px;
+            margin: 0 auto;
+            height: 70px; /* Add explicit height */
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            padding: 8px 16px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(226, 138, 183, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.4s ease;
+        }
+
+        .nav-item:hover:before {
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            opacity: 1;
+            background: linear-gradient(135deg, rgba(228, 93, 160, 0.1), rgba(255, 167, 200, 0.1));
+            transform: translateY(-2px);
+        }
+
+        .nav-item.active:before {
+            background: rgba(226, 138, 183, 0.15);
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+        }
+
+        .nav-icon {
+            font-size: 22px;
+            margin-bottom: 4px;
+        }
+
+        /* Dashboard components */
+        .metric-card {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 
+                0 4px 15px rgba(0, 0, 0, 0.1),
+                0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 
+                0 8px 25px rgba(226, 138, 183, 0.15),
+                inset 0 0 25px rgba(255, 255, 255, 0.8);
+        }
+
+        .metric-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .metric-title {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .metric-value {
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background-color: var(--grey);
+            border-radius: 3px;
+            margin-bottom: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        .fill-flow {
+            background-color: var(--primary);
+            width: 65%;
+        }
+
+        .fill-hydration {
+            background-color: var(--secondary);
+            width: 80%;
+        }
+
+        .fill-temperature {
+            background-color: var(--warning);
+            width: 50%;
+        }
+
+        .metric-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #777;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .action-button {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .sos-button {
+            background-color: var(--danger);
+            color: var(--white);
+        }
+
+        .tips-button {
+            background-color: var(--success);
+            color: var(--white);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 20px 0 15px;
+            color: var(--primary-dark);
+        }
+
+        .graph-container {
+            height: 200px;
+            margin-bottom: 20px;
+        }
+
+        /* Analytics page */
+        .analytics-tabs {
+            display: flex;
+            overflow-x: auto;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+        }
+
+        .tab {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 138, 183, 0.1);
+            box-shadow: 0 2px 8px rgba(226, 138, 183, 0.05);
+            transition: all 0.3s ease;
+            padding: 10px 15px;
+            border-radius: 20px;
+            margin-right: 10px;
+            font-size: 14px;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(226, 138, 183, 0.1);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(226, 138, 183, 0.2);
+            color: var(--white);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Custom Scrollbar Improvements */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 238, 248, 0.8);
+            border-radius: 20px;
+            margin: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, var(--primary-light), var(--primary));
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            border: 2px solid rgba(255, 255, 255, 0.9);
+        }
+
+        /* Emergency page */
+        .emergency-card {
+            background-color: var(--white);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--danger);
+        }
+
+        .big-sos-button {
+            background-color: var(--danger);
+            color: var(--white);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 24px;
+            margin: 25px 0;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(255, 75, 75, 0.3);
+            transition: all 0.2s;
+        }
+
+        .big-sos-button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 16px rgba(255, 75, 75, 0.4);
+        }
+
+        .emergency-option {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--grey);
+        }
+
+        .emergency-option:last-child {
+            border-bottom: none;
+        }
+
+        .option-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ffeeee;
+            color: var(--danger);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            font-size: 20px;
+        }
+
+        .option-details h3 {
+            font-size: 16px;
+            margin-bottom: 3px;
+        }
+
+        .option-details p {
+            font-size: 13px;
+            color: #777;
+        }
+
+        .map-container {
+            height: 250px;
+            background-color: #eee;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        /* Community page */
+        .community-card {
+            background-color: var(--white);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .community-tabs {
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 1px solid var(--grey);
+            margin-bottom: 20px;
+        }
+
+        .community-tab {
+            padding: 10px 0;
+            font-size: 14px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .community-tab.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .community-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--primary);
+        }
+
+        .community-tab-content {
+            display: none;
+        }
+
+        .community-tab-content.active {
+            display: block;
+        }
+
+        .forum-post {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--grey);
+        }
+
+        .forum-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            margin-right: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .post-time {
+            font-size: 12px;
+            color: #777;
+        }
+
+        .post-content {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .post-actions {
+            display: flex;
+            font-size: 12px;
+            color: #777;
+        }
+
+        .post-action {
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .challenge-card {
+            background-color: #f8f8f8;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .challenge-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .challenge-bar {
+            flex-grow: 1;
+            height: 6px;
+            background-color: var(--grey);
+            border-radius: 3px;
+            margin: 0 10px;
+            overflow: hidden;
+        }
+
+        .challenge-fill {
+            height: 100%;
+            background-color: var(--success);
+            width: 75%;
+        }
+
+        /* Settings page */
+        .settings-section {
+            margin-bottom: 30px;
+        }
+
+        .settings-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--grey);
+        }
+
+        .settings-option:last-child {
+            border-bottom: none;
+        }
+
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Voice assistant modal */
+        .voice-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .voice-modal.active {
+            display: flex;
+        }
+
+        .voice-content {
+            background-color: white;
+            border-radius: 20px;
+            width: 80%;
+            max-width: 350px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .voice-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+            color: white;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(255, 107, 156, 0.4);
+            }
+            
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 20px rgba(255, 107, 156, 0);
+            }
+            
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(255, 107, 156, 0);
+            }
+        }
+
+        .voice-text {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .voice-close {
+            background-color: var(--grey);
+            color: var(--text);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary);
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            max-width: 90%;
+            opacity: 0;
+            transition: opacity 0.3s;
+            color: white;
+        }
+
+        .notification.active {
+            opacity: 1;
+        }
+
+        .notification-icon {
+            margin-right: 15px;
+            font-size: 20px;
+        }
+
+        .notification-success {
+            background-color: var(--success);
+        }
+
+        .notification-warning {
+            background-color: var(--warning);
+            color: var(--text);
+        }
+
+        .notification-danger {
+            background-color: var(--danger);
+        }
+
+        /* SOS Modal */
+        .sos-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 75, 75, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .sos-modal.active {
+            display: flex;
+        }
+
+        .sos-content {
+            background-color: white;
+            border-radius: 20px;
+            width: 80%;
+            max-width: 350px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .sos-timer {
+            font-size: 48px;
+            font-weight: 700;
+            margin: 20px 0;
+            color: var(--danger);
+        }
+
+        .sos-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .sos-button {
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+            margin: 0 5px;
+        }
+
+        .sos-cancel {
+            background-color: var(--grey);
+            color: var(--text);
+        }
+
+        #decorative-scene {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        .decorative-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 70% 20%, rgba(255, 183, 213, 0.2), transparent 70%),
+                        radial-gradient(circle at 30% 80%, rgba(200, 183, 255, 0.2), transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .decorative-leaves {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.1;
+            background: 
+                url('leav.png') repeat,
+                radial-gradient(circle at 30% 20%, var(--leaf-green), transparent 60%);
+        }
+
+        .hospital-popup {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .hospital-popup h3 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .hospital-popup button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 15px;
+            margin-top: 5px;
+            cursor: pointer;
+        }
+
+        .map-tiles {
+            filter: hue-rotate(340deg) saturate(1.2);
+        }
+
+        .user-location-marker .pulse {
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            position: relative;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        .floating-element {
+            position: fixed;
+            pointer-events: none;
+            z-index: 2;
+            animation: float-around 15s linear infinite;
+            opacity: 0.6;
+            font-size: 24px;
+        }
+
+        @keyframes float-around {
+            0% {
+                transform: translate(0, 110vh) rotate(0deg);
+            }
+            100% {
+                transform: translate(100vw, -10vh) rotate(360deg);
+            }
+        }
+
+        .nature-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #fff5f8, #fff0f5);
+            z-index: -1;
+        }
+
+        .nature-overlay {
+            pointer-events: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+        }
+
+        .petal-animation {
+            position: absolute;
+            pointer-events: none;
+            z-index: 2;
+            animation: floatPetal 12s linear infinite;
+            opacity: 0.8;
+            font-size: 20px;
+        }
+
+        @keyframes floatPetal {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100vw) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        .app-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #natureOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .floating-element {
+            position: absolute;
+            font-size: 24px;
+            animation: float 15s infinite linear;
+            opacity: 0.7;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0.2;
+            }
+        }
+
+        .petal-animation {
+            position: absolute;
+            font-size: 20px;
+            animation: fall 8s linear forwards;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-10vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(110vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        #decorative-scene {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .user-location-marker {
+            background: rgba(0, 128, 255, 0.2);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .user-location-marker .pulse {
+            width: 10px;
+            height: 10px;
+            background: #007bff;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* Map containers */
+        #emergencyMap, #communityMap {
+            height: 400px;
+            width: 100%;
+        }
+
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            display: none;
+            z-index: 1000;
+        }
+
+        .notification.active {
+            display: block;
+        }
+
+        .notification-info {
+            background-color: #007bff;
+        }
+
+        .notification-success {
+            background-color: #28a745;
+        }
+
+        .notification-error {
+            background-color: #dc3545;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div class="nature-background"></div>
+    <div id="decorative-scene"></div>
+    <div class="decorative-overlay"></div>
+    <div class="decorative-leaves"></div>
+    <div class="app-container">
+        <div class="nature-overlay" id="natureOverlay"></div>
+        <header>
+            <h1>Smart Fem Infinity X</h1>
+            <div class="voice-assistant" onclick="toggleVoiceAssistant()">
+                <img src="ai--icon.png" alt="Voice Assistant" style="width: 24px; height: 24px;" />
+            </div>
+        </header>
+        
+
+        <!-- Home Page (Dashboard) -->
+        <div class="page active" id="home">
+            <div class="metric-card">
+                <div class="metric-heading">
+                    <span class="metric-title">Flow Rate</span>
+                    <span class="metric-value">65%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill fill-flow"></div>
+                </div>
+                <div class="metric-info">
+                    <span>Moderate flow</span>
+                    <span>Last update: 5 min ago</span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-heading">
+                    <span class="metric-title">Hydration Level</span>
+                    <span class="metric-value">80%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill fill-hydration"></div>
+                </div>
+                <div class="metric-info">
+                    <span>Good hydration</span>
+                    <span>Last update: 15 min ago</span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-heading">
+                    <span class="metric-title">Temperature</span>
+                    <span class="metric-value">37.2°C</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill fill-temperature"></div>
+                </div>
+                <div class="metric-info">
+                    <span>Normal range</span>
+                    <span>Last update: 10 min ago</span>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <div class="action-button sos-button" onclick="showSOSModal()">
+                    <i>🚨</i>
+                    <p>SOS</p>
+                </div>
+                <div class="action-button tips-button" onclick="showNotification('Drink water! You\'re slightly dehydrated.', 'warning')">
+                    <i>💧</i>
+                    <p>Health Tips</p>
+                </div>
+            </div>
+
+            <h2 class="section-title">Current Cycle</h2>
+            <div class="graph-container">
+                <canvas id="cycleChart"></canvas>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-heading">
+                    <span class="metric-title">Today's Mood</span>
+                    <span class="metric-value">😊</span>
+                </div>
+                <div class="metric-info">
+                    <span>You've been feeling good today</span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-heading">
+                    <span class="metric-title">Posture</span>
+                    <span class="metric-value">Good</span>
+                </div>
+                <div class="metric-info">
+                    <span>You've maintained proper posture</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Page -->
+        <div class="page" id="analytics">
+            <div class="analytics-tabs">
+                <div class="tab active" onclick="switchTab('flow', this)">Flow Rate</div>
+                <div class="tab" onclick="switchTab('hydration', this)">Hydration</div>
+                <div class="tab" onclick="switchTab('mood', this)">Mood & Sleep</div>
+                <div class="tab" onclick="switchTab('predictions', this)">Predictions</div>
+            </div>
+
+            <div class="tab-content active" id="flow-tab">
+                <h2 class="section-title">Flow Rate Analytics</h2>
+                <div class="graph-container">
+                    <canvas id="flowChart"></canvas>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-heading">
+                        <span class="metric-title">Flow Summary</span>
+                    </div>
+                    <p style="font-size: 14px; line-height: 1.5;">
+                        Your flow rate has been moderate throughout the day, with a slight increase in the afternoon. This pattern is consistent with your previous cycles.
+                    </p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-heading">
+                        <span class="metric-title">AI Recommendations</span>
+                    </div>
+                    <p style="font-size: 14px; line-height: 1.5;">
+                        Based on your flow rate, consider changing your cup around 2 PM today. To manage your moderate flow, maintain your hydration levels and consider iron-rich foods for the next few days.
+                    </p>
+                </div>
+            </div>
+
+            <div class="tab-content" id="hydration-tab">
+                <h2 class="section-title">Hydration Analytics</h2>
+                <div class="graph-container">
+                    <canvas id="hydrationChart"></canvas>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-heading">
+                        <span class="metric-title">Hydration Summary</span>
+                    </div>
+                    <p style="font-size: 14px; line-height: 1.5;">
+                        Your hydration levels have been good overall, but there was a slight dip in the afternoon. You've consumed about 1.5L of water today.
+                    </p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-heading">
+                        <span class="metric-title">AI Recommendations</span>
+                    </div>
+                    <p style="font-size: 14px; line-height: 1.5;">
+                        Try to drink an additional 500ml of water in the afternoon. Consider herbal teas or infused water to increase your hydration during menstruation.
+                    </p>
+                </div>
+            </div>
+
+            <div class="tab-content" id="mood-tab">
+                <h2 class="section-title">Mood & Sleep Analytics</h2>
+                <div class="graph-container">
+                    <canvas id="moodChart"></canvas>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-heading">
+                        <span class="metric-title">Mood Summary</span>
+                    </div>
+                    <p style="font-size: 14px; line-height: 1.5;">
+                        Your mood has been relatively stable during this cycle. You reported feeling slightly anxious on day 2, but generally positive throughout.
+                    </p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-heading">
+                        <span class="metric-title">Sleep Analysis</span>
+                    </div>
+                    <p style="font-size: 14px; line-height: 1.5;">
+                        Your sleep quality has been good, with an average of 7.5 hours per night. There was slightly reduced REM sleep on the first day of your cycle.
+                    </p>
+                </div>
+            </div>
+
+            <div class="tab-content" id="predictions-tab">
+                <h2 class="section-title">Predictive Analytics</h2>
+                <div class="graph-container">
+                    <canvas id="predictionsChart"></canvas>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-heading">
+                        <span class="metric-title">Cycle Predictions</span>
+                    </div>
+                    <p style="font-size: 14px; line-height: 1.5;">
+                        Based on your data, your current cycle should end in approximately 3 days. Your next cycle is predicted to start around May 9th, 2025.
+                    </p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-heading">
+                        <span class="metric-title">Health Predictions</span>
+                    </div>
+                    <p style="font-size: 14px; line-height: 1.5;">
+                        Our AI detects a possibility of mild cramps tomorrow based on your historical data. Consider having pain relief medication on hand and increasing your magnesium intake today.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emergency Page -->
+        <div class="page" id="emergency">
+            <div class="emergency-card">
+                <h2 style="color: var(--danger); margin-bottom: 15px;">Emergency Features</h2>
+                <p style="font-size: 14px; line-height: 1.5;">
+                    Stay safe with Smart Fem Infinity X's emergency features. Press the SOS button or use the volume button three times for silent alerts.
+                </p>
+            </div>
+
+            <div class="big-sos-button" onclick="showSOSModal()">
+                <i>🚨</i> SOS ALERT
+            </div>
+
+            <div class="emergency-option">
+                <div class="option-icon">
+                    <i>🔊</i>
+                </div>
+                <div class="option-details">
+                    <h3>Silent SOS</h3>
+                    <p>Press volume button 3 times to send a silent alert</p>
+                </div>
+            </div>
+
+            <div class="emergency-option">
+                <div class="option-icon">
+                    <i>📍</i>
+                </div>
+                <div class="option-details">
+                    <h3>Location Sharing</h3>
+                    <p>Share your location with emergency contacts</p>
+                </div>
+            </div>
+
+            <div class="emergency-option">
+                <div class="option-icon">
+                    <i>🚨</i>
+                </div>
+                <div class="option-details">
+                    <h3>Auto Emergency Detection</h3>
+                    <p>Get automatic alerts if unauthorized cup removal is detected</p>
+                </div>
+            </div>
+
+            <h2 class="section-title">Nearby Medical Help</h2>
+            <div class="map-container" id="emergencyMap"></div>
+
+            <div class="emergency-option">
+                <div class="option-icon">
+                    <i>🏥</i>
+                </div>
+                <div class="option-details">
+                    <h3>Sir Sunderlal Hospital (BHU)</h3>
+                    <p>1.2 km away • Open 24/7</p>
+                </div>
+            </div>
+
+            <div class="emergency-option">
+                <div class="option-icon">
+                    <i>🏥</i>
+                </div>
+                <div class="option-details">
+                    <h3>Heritage Hospital</h3>
+                    <p>2.1 km away • Open 24/7</p>
+                </div>
+            </div>
+            <div class="emergency-option">
+                <div class="option-icon">
+                    <i>🏥</i>
+                </div>
+                <div class="option-details">
+                    <h3>Galaxy Hospital</h3>
+                    <p>5.1 km away • Open 24/7</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Community Page -->
+        <div class="page" id="community">
+            <div class="community-card">
+                <div class="community-tabs">
+                    <div class="community-tab active" onclick="switchCommunityTab('forum')">Forum</div>
+                    <div class="community-tab" onclick="switchCommunityTab('nearby')">Nearby Help</div>
+                    <div class="community-tab" onclick="switchCommunityTab('challenges')">Challenges</div>
+                </div>
+
+                <div class="community-tab-content active" id="forum-tab">
+                    <div class="forum-post">
+                        <div class="forum-header">
+                            <div class="user-info">
+                                <div class="user-avatar">K</div>
+                                <div class="user-name">Kiara Mehta</div>
+                            </div>
+                            <div class="post-time">2 hours ago</div>
+                        </div>
+                        <div class="post-content">
+                            Has anyone tried the new organic cotton pads from EcoFlow? I'm looking for eco-friendly alternatives and would love to hear your experiences!
+                        </div>
+                        <div class="post-actions">
+                            <div class="post-action">❤️ 12 Likes</div>
+                            <div class="post-action">💬 8 Comments</div>
+                            <div class="post-action">🔄 Share</div>
+                        </div>
+                        </div>
+                        
+                        <div class="forum-post">
+                        <div class="forum-header">
+                            <div class="user-info">
+                                <div class="user-avatar">M</div>
+                                <div class="user-name">Mrunal</div>
+                            </div>
+                            <div class="post-time">5 hours ago</div>
+                        </div>
+                        <div class="post-content">
+                            I've been experiencing really bad cramps this month. Does anyone have suggestions for natural remedies that actually work? I've tried heat pads but looking for other options too.
+                        </div>
+                        <div class="post-actions">
+                            <div class="post-action">❤️ 24 Likes</div>
+                            <div class="post-action">💬 15 Comments</div>
+                            <div class="post-action">🔄 Share</div>
+                        </div>
+                        </div>
+                        
+                        <div class="forum-post">
+                        <div class="forum-header">
+                            <div class="user-info">
+                                <div class="user-avatar">L</div>
+                                <div class="user-name">Lana Del Rey</div>
+                            </div>
+                            <div class="post-time">Yesterday</div>
+                        </div>
+                        <div class="post-content">
+                            Just want to say how much this community has helped me understand my body better. Before using Smart Fem, I never knew when my period was coming and I was always caught off guard. Now I'm prepared and feel so much more in control!
+                        </div>
+                        <div class="post-actions">
+                            <div class="post-action">❤️ 56 Likes</div>
+                            <div class="post-action">💬 7 Comments</div>
+                            <div class="post-action">🔄 Share</div>
+                        </div>
+                        </div>
+                        
+                        <div class="create-post">
+                            <button class="create-post-button" style="background-color: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 20px; width: 100%; margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 5px;">
+                                <i>✏️</i> Create New Post
+                            </button>
+                        </div>
+                        </div>
+                        
+                        <div class="community-tab-content" id="nearby-tab">
+                        <h2 class="section-title">Nearby Support</h2>
+                        <div class="map-container" id="communityMap"></div>
+                        
+                        <div class="nearby-filters" style="display: flex; overflow-x: auto; margin: 15px 0; gap: 10px;">
+                            <div class="filter-button" style="background-color: var(--primary); color: white; padding: 8px 15px; border-radius: 15px; font-size: 12px; white-space: nowrap;">All</div>
+                            <div class="filter-button" style="background-color: var(--grey); padding: 8px 15px; border-radius: 15px; font-size: 12px; white-space: nowrap;">Health Clinics</div>
+                            <div class="filter-button" style="background-color: var(--grey); padding: 8px 15px; border-radius: 15px; font-size: 12px; white-space: nowrap;">Pharmacies</div>
+                            <div class="filter-button" style="background-color: var(--grey); padding: 8px 15px; border-radius: 15px; font-size: 12px; white-space: nowrap;">Support Groups</div>
+                            <div class="filter-button" style="background-color: var(--grey); padding: 8px 15px; border-radius: 15px; font-size: 12px; white-space: nowrap;">Product Stores</div>
+                        </div>
+                        
+                        <div class="nearby-location">
+                            <div class="location-header" style="display: flex; justify-content: space-between; align-items: center;">
+                                <div class="location-name" style="font-weight: 600; font-size: 16px;">Sir Sunderlal Hospital (BHU)</div>
+                                <div class="location-distance" style="background-color: var(--primary-light); color: var(--primary-dark); padding: 3px 8px; border-radius: 10px; font-size: 12px;">1.2 km</div>
+                            </div>
+                            <div class="location-address" style="font-size: 14px; color: #777; margin: 5px 0;">BHU Campus, Varanasi</div>
+                            <div class="location-details" style="display: flex; justify-content: space-between; margin-top: 5px;">
+                                <div class="location-hours" style="font-size: 12px;">Open 24/7</div>
+                                <div class="location-actions" style="display: flex; gap: 10px;">
+                                    <div class="location-action" style="font-size: 12px; color: var(--primary); cursor: pointer;">📞 Call</div>
+                                    <div class="location-action" style="font-size: 12px; color: var(--primary); cursor: pointer;">🗺️ Directions</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="nearby-location" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--grey);">
+                            <div class="location-header" style="display: flex; justify-content: space-between; align-items: center;">
+                                <div class="location-name" style="font-weight: 600; font-size: 16px;">Riya (BHU Student)</div>
+                                <div class="location-distance" style="background-color: var(--primary-light); color: var(--primary-dark); padding: 3px 8px; border-radius: 10px; font-size: 12px;">2.1 km</div>
+                            </div>
+                            <div class="location-address" style="font-size: 14px; color: #777; margin: 5px 0;">Assi Ghat, Varanasi</div>
+                            <div class="location-details" style="display: flex; justify-content: space-between; margin-top: 5px;">
+                                <div class="location-hours" style="font-size: 12px;">Open 24/7</div>
+                                <div class="location-actions" style="display: flex; gap: 10px;">
+                                    <div class="location-action" style="font-size: 12px; color: var(--primary); cursor: pointer;">💬 Message</div>
+                                    <div class="location-action" style="font-size: 12px; color: var(--primary); cursor: pointer;">🗺️ Directions</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="nearby-location" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--grey);">
+                            <div class="location-header" style="display: flex; justify-content: space-between; align-items: center;">
+                                <div class="location-name" style="font-weight: 600; font-size: 16px;">Dr. Ananya (Trama Centre)</div>
+                                <div class="location-distance" style="background-color: var(--primary-light); color: var(--primary-dark); padding: 3px 8px; border-radius: 10px; font-size: 12px;">1.5 miles</div>
+                            </div>
+                            <div class="location-address" style="font-size: 14px; color: #777; margin: 5px 0;">Trama Centre, Lanka Varanasi</div>
+                            <div class="location-details" style="display: flex; justify-content: space-between; margin-top: 5px;">
+                                <div class="location-hours" style="font-size: 12px;">Open until 9PM</div>
+                                <div class="location-actions" style="display: flex; gap: 10px;">
+                                    <div class="location-action" style="font-size: 12px; color: var(--primary); cursor: pointer;">📞 Call</div>
+                                    <div class="location-action" style="font-size: 12px; color: var(--primary); cursor: pointer;">🗺️ Directions</div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        
+                        <div class="community-tab-content" id="challenges-tab">
+                        <h2 class="section-title">Community Challenges</h2>
+                        
+                        <div class="challenge-card">
+                            <h3 style="font-size: 16px; margin-bottom: 5px;">Hydration Challenge</h3>
+                            <p style="font-size: 14px; color: #555;">Drink 8 glasses of water daily during your cycle</p>
+                            <div class="challenge-progress">
+                                <span style="font-size: 12px;">6/8 glasses</span>
+                                <div class="challenge-bar">
+                                    <div class="challenge-fill" style="width: 75%;"></div>
+                                </div>
+                                <span style="font-size: 12px;">75%</span>
+                            </div>
+                            <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                                <button style="background-color: var(--primary); color: white; border: none; padding: 5px 10px; border-radius: 15px; font-size: 12px;">Update Progress</button>
+                            </div>
+                        </div>
+                        
+                        <div class="challenge-card">
+                            <h3 style="font-size: 16px; margin-bottom: 5px;">Self-Care Week</h3>
+                            <p style="font-size: 14px; color: #555;">Complete one self-care activity daily</p>
+                            <div class="challenge-progress">
+                                <span style="font-size: 12px;">4/7 days</span>
+                                <div class="challenge-bar">
+                                    <div class="challenge-fill" style="width: 57%; background-color: var(--secondary);"></div>
+                                </div>
+                                <span style="font-size: 12px;">57%</span>
+                            </div>
+                            <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                                <button style="background-color: var(--primary); color: white; border: none; padding: 5px 10px; border-radius: 15px; font-size: 12px;">Log Activity</button>
+                            </div>
+                        </div>
+                        
+                        <div class="challenge-card">
+                            <h3 style="font-size: 16px; margin-bottom: 5px;">Period Positivity</h3>
+                            <p style="font-size: 14px; color: #555;">Share one positive thought about your cycle</p>
+                            <div style="display: flex; justify-content: center; margin-top: 10px;">
+                                <button style="background-color: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 15px; font-size: 14px; width: 100%;">Join Challenge</button>
+                            </div>
+                        </div>
+                        
+                        <h3 style="margin: 20px 0 10px; font-size: 16px;">Community Achievements</h3>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center;">
+                            <div>
+                                <div style="background-color: var(--primary-light); color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 5px; font-size: 20px;">💧</div>
+                                <div style="font-size: 12px;">Hydration Master</div>
+                            </div>
+                            <div>
+                                <div style="background-color: #e0e0e0; color: #777; width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 5px; font-size: 20px;">🧠</div>
+                                <div style="font-size: 12px;">Cycle Tracker</div>
+                            </div>
+                            <div>
+                                <div style="background-color: #e0e0e0; color: #777; width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 5px; font-size: 20px;">🌱</div>
+                                <div style="font-size: 12px;">Eco Warrior</div>
+                            </div>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        
+                        <!-- Settings Page -->
+                        <div class="page" id="settings">
+                            <div class="settings-section">
+                                <h2 class="section-title">Account Settings</h2>
+                                <div class="settings-option">
+                                    <span>Profile Information</span>
+                                    <span style="color: var(--primary);">Edit</span>
+                                </div>
+                                <div class="settings-option">
+                                    <span>Privacy Settings</span>
+                                    <span style="color: var(--primary);">Edit</span>
+                                </div>
+                                <div class="settings-option">
+                                    <span>Connected Devices</span>
+                                    <span style="color: var(--primary);">Manage</span>
+                                </div>
+                            </div>
+                        
+                            <div class="settings-section">
+                                <h2 class="section-title">App Settings</h2>
+                                <div class="settings-option">
+                                    <span>Notifications</span>
+                                    <label class="toggle">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="settings-option">
+                                    <span>Location Services</span>
+                                    <label class="toggle">
+                                    <span>Emergency Contacts</span>
+                                    <span style="color: var(--primary);">Manage</span>
+                                </div>
+                            </div>
+                        
+                            <div class="settings-section">
+                                <h2 class="section-title">Device Settings</h2>
+                                <div class="settings-option">
+                                    <span>Smart Fem Infinity X Status</span>
+                                    <span style="color: var(--success);">Connected</span>
+                                </div>
+                                <div class="settings-option">
+                                    <span>Firmware Update</span>
+                                    <span style="color: var(--secondary);">Check</span>
+                                </div>
+                                <div class="settings-option">
+                                    <span>Battery Level</span>
+                                    <span>85%</span>
+                                </div>
+                            </div>
+                        
+                            <div class="settings-section">
+                                <h2 class="section-title">Support</h2>
+                                <div class="settings-option">
+                                    <span>Help Center</span>
+                                    <span style="color: var(--primary);">Visit</span>
+                                </div>
+                                <div class="settings-option">
+                                    <span>Contact Support</span>
+                                    <span style="color: var(--primary);">Contact</span>
+                                </div>
+                                <div class="settings-option">
+                                    <span>About Smart Fem</span>
+                                    <span style="color: var(--primary);">View</span>
+                                </div>
+                            </div>
+                        
+                            <div style="text-align: center; margin: 30px 0; color: var(--danger);">
+                                <p>Log Out</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Voice Assistant Modal -->
+                        <div class="voice-modal" id="voiceModal">
+                            <div class="voice-content">
+                                <div class="voice-icon">
+                                    <img src="heart.png" alt="Mic Icon" style="width: 24px; height: 24px;" />
+                                </div>
+                                <div class="voice-text">Listening...</div>
+                                <button class="voice-close" onclick="toggleVoiceAssistant()">Cancel</button>
+                            </div>
+                            
+                        </div>
+                        
+                        <!-- SOS Modal -->
+                        <div class="sos-modal" id="sosModal">
+                            <div class="sos-content">
+                                <h2>Emergency Alert</h2>
+                                <p>Sending SOS alert in:</p>
+                                <div class="sos-timer" id="sosTimer">5</div>
+                                <div class="sos-buttons">
+                                    <button class="sos-button sos-cancel" onclick="cancelSOS()">Cancel</button>
+                                    <button class="sos-button" onclick="sendSOSNow()">Send Now</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Notification -->
+                        <div class="notification" id="notification">
+                            <div class="notification-icon">
+                                <i>ℹ️</i>
+                            </div>
+                            <div class="notification-text">This is a notification</div>
+                        </div>
+                        
+                        <!-- Bottom Navigation -->
+                        <div class="bottom-nav">
+                            <div class="nav-item active" onclick="navigateTo('home')">
+                                <div class="nav-icon">🏠</div>
+                                <span>Home</span>
+                            </div>
+                            <div class="nav-item" onclick="navigateTo('analytics')">
+                                <div class="nav-icon">📊</div>
+                                <span>Analytics</span>
+                            </div>
+                            <div class="nav-item" onclick="navigateTo('emergency')">
+                                <div class="nav-icon">🚨</div>
+                                <span>Emergency</span>
+                            </div>
+                            <div class="nav-item" onclick="navigateTo('community')">
+                                <div class="nav-icon">👥</div>
+                                <span>Community</span>
+                            </div>
+                            <div class="nav-item" onclick="navigateTo('settings')">
+                                <div class="nav-icon">⚙️</div>
+                                <span>Settings</span>
+                            </div>
+                        </div>
+                        
+                        <script>
+                            // Navigation Functions
+                            function navigateTo(pageId) {
+                                document.querySelectorAll('.page').forEach(page => {
+                                    page.classList.remove('active');
+                                });
+                                document.getElementById(pageId).classList.add('active');
+                        
+                                document.querySelectorAll('.nav-item').forEach(item => {
+                                    item.classList.remove('active');
+                                });
+                                event.currentTarget.classList.add('active');
+                            }
+                        
+                            // Tab Switching Functions
+                            function switchTab(tabId, clickedTab) {
+                                document.querySelectorAll('.tab').forEach(tab => {
+                                    tab.classList.remove('active');
+                                });
+                                clickedTab.classList.add('active');
+                        
+                                document.querySelectorAll('.tab-content').forEach(content => {
+                                    content.classList.remove('active');
+                                });
+                                document.getElementById(tabId + '-tab').classList.add('active');
+                            }
+                        
+                            function switchCommunityTab(tabId) {
+                                document.querySelectorAll('.community-tab').forEach(tab => {
+                                    tab.classList.remove('active');
+                                });
+                                event.currentTarget.classList.add('active');
+                        
+                                document.querySelectorAll('.community-tab-content').forEach(content => {
+                                    content.classList.remove('active');
+                                });
+                                document.getElementById(tabId + '-tab').classList.add('active');
+                            }
+                        
+                            // Voice Assistant Functions
+                            function toggleVoiceAssistant() {
+                                document.getElementById('voiceModal').classList.toggle('active');
+                            }
+                        
+                            // SOS Functions
+                            let sosInterval;
+                            let sosCount = 5;
+                        
+                            function showSOSModal() {
+                                document.getElementById('sosModal').classList.add('active');
+                                sosCount = 5;
+                                document.getElementById('sosTimer').textContent = sosCount;
+                                
+                                sosInterval = setInterval(() => {
+                                    sosCount--;
+                                    document.getElementById('sosTimer').textContent = sosCount;
+                                    
+                                    if (sosCount <= 0) {
+                                        sendSOSNow();
+                                    }
+                                }, 1000);
+                            }
+                        
+                            function cancelSOS() {
+                                clearInterval(sosInterval);
+                                document.getElementById('sosModal').classList.remove('active');
+                            }
+                        
+                            function sendSOSNow() {
+                                clearInterval(sosInterval);
+                                document.getElementById('sosModal').classList.remove('active');
+                                showNotification('Emergency alert sent to your contacts', 'success');
+                            }
+                        
+                            // Notification Functions
+                            function showNotification(message, type = 'info') {
+                                const notification = document.getElementById('notification');
+                                notification.className = 'notification notification-' + type;
+                                notification.querySelector('.notification-text').textContent = message;
+                                
+                                notification.classList.add('active');
+                                
+                                setTimeout(() => {
+                                    notification.classList.remove('active');
+                                }, 3000);
+                            }
+                        
+                            // Initialize Charts
+                            document.addEventListener('DOMContentLoaded', function() {
+                                // Cycle Chart
+                                const cycleCtx = document.getElementById('cycleChart').getContext('2d');
+                                new Chart(cycleCtx, {
+                                    type: 'line',
+                                    data: {
+                                        labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
+                                        datasets: [{
+                                            label: 'Flow Rate',
+                                            data: [90, 85, 70, 65, 50, 35, 20],
+                                            borderColor: '#f55c96',
+                                            backgroundColor: 'rgba(245, 92, 150, 0.2)',
+                                            fill: true
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true,
+                                                max: 100
+                                            }
+                                        }
+                                    }
+                                });
+                        
+                                // Flow Chart
+                                const flowCtx = document.getElementById('flowChart').getContext('2d');
+                                new Chart(flowCtx, {
+                                    type: 'line',
+                                    data: {
+                                        labels: ['8AM', '10AM', '12PM', '2PM', '4PM', '6PM', '8PM'],
+                                        datasets: [{
+                                            label: 'Flow Rate',
+                                            data: [40, 55, 65, 70, 65, 60, 55],
+                                            borderColor: '#f55c96',
+                                            backgroundColor: 'rgba(245, 92, 150, 0.2)',
+                                            fill: true
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true,
+                                                max: 100
+                                            }
+                                        }
+                                    }
+                                });
+                        
+                                // Hydration Chart
+                                const hydrationCtx = document.getElementById('hydrationChart').getContext('2d');
+                                new Chart(hydrationCtx, {
+                                    type: 'line',
+                                    data: {
+                                        labels: ['8AM', '10AM', '12PM', '2PM', '4PM', '6PM', '8PM'],
+                                        datasets: [{
+                                            label: 'Hydration Level',
+                                            data: [70, 75, 85, 75, 70, 80, 85],
+                                            borderColor: '#5c61f5',
+                                            backgroundColor: 'rgba(92, 97, 245, 0.2)',
+                                            fill: true
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true,
+                                                max: 100
+                                            }
+                                        }
+                                    }
+                                });
+                        
+                                // Mood Chart
+                                const moodCtx = document.getElementById('moodChart').getContext('2d');
+                                new Chart(moodCtx, {
+                                    type: 'bar',
+                                    data: {
+                                        labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5'],
+                                        datasets: [
+                                            {
+                                                label: 'Mood',
+                                                data: [60, 40, 65, 75, 80],
+                                                backgroundColor: 'rgba(245, 92, 150, 0.7)'
+                                            },
+                                            {
+                                                label: 'Sleep Quality',
+                                                data: [70, 65, 60, 80, 75],
+                                                backgroundColor: 'rgba(92, 97, 245, 0.7)'
+                                            }
+                                        ]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true,
+                                                max: 100
+                                            }
+                                        }
+                                    }
+                                });
+                        
+                                // Predictions Chart
+                                const predictionsCtx = document.getElementById('predictionsChart').getContext('2d');
+                                new Chart(predictionsCtx, {
+                                    type: 'line',
+                                    data: {
+                                        labels: ['Apr 10', 'Apr 11', 'Apr 12', 'Apr 13', 'Apr 14', 'Apr 15'],
+                                        datasets: [{
+                                            label: 'Actual Flow',
+                                            data: [90, 85, 65, null, null, null],
+                                            borderColor: '#f55c96',
+                                            backgroundColor: 'rgba(245, 92, 150, 0.2)',
+                                            fill: true
+                                        }, {
+                                            label: 'Predicted Flow',
+                                            data: [90, 85, 65, 40, 25, 10],
+                                            borderColor: '#f55c96',
+                                            backgroundColor: 'rgba(245, 92, 150, 0)',
+                                            borderDash: [5, 5],
+                                            fill: false
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true,
+                                                max: 100
+                                            }
+                                        }
+                                    }
+                                });
+                        
+                                // Initialize Maps
+                                // Emergency Map
+                                const emergencyMap = L.map('emergencyMap').setView([40.712776, -74.005974], 13);
+                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                }).addTo(emergencyMap);
+                        
+                                // Add markers for hospitals
+                                L.marker([25.273610, 82.995380])
+                                    .addTo(emergencyMap)
+                                    .bindPopup('BHU<br>Open 24 hours');
+                                
+                                L.marker([25.30519, 82.97493])
+                                    .addTo(emergencyMap)
+                                    .bindPopup('Galaxy Hospital<br>Open 24 hours');
+                        
+                                // Community Map
+                                const communityMap = L.map('communityMap').setView([25.3176, 82.9739], 13);
+                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                }).addTo(communityMap);
+                        
+                                // Add community support markers
+                                L.marker([25.284266, 83.006924])
+                                    .addTo(communityMap)
+                                    .bindPopup('Riya (BHU - student)<br>Assi Ghat, Varanasi<br>Available for support');
+                                
+                                L.marker([25.301578, 82.996719])
+                                    .addTo(communityMap)
+                                    .bindPopup('Bharti<br>Sunbeam School, Varanasi<br>Available for support');
+                                
+                                L.marker([25.3168, 83.0124])
+                                    .addTo(communityMap)
+                                    .bindPopup('Dr. Jiya <br>BHU hospital <br>Available for support');
+                            });
+                       
+                            // Varanasi coordinates
+                            const VARANASI_LAT = 25.31668000;
+                            const VARANASI_LNG = 83.01041000;
+
+                            // 3D Scene Setup with improved loading
+                            function setupScene() {
+                                const scene = new THREE.Scene();
+                                const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                                const renderer = new THREE.WebGLRenderer({ 
+                                    canvas: document.getElementById('decorative-scene'),
+                                    alpha: true,
+                                    antialias: true 
+                                });
+
+                                renderer.setSize(window.innerWidth, window.innerHeight);
+                                renderer.setClearColor(0x000000, 0);
+                                
+                                // Enhanced lighting
+                                const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+                                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                                directionalLight.position.set(0, 10, 5);
+                                const hemisphereLight = new THREE.HemisphereLight(0xffdeff, 0xffc2c2, 0.6);
+                                scene.add(ambientLight, directionalLight, hemisphereLight);
+
+                                // Load rabbit model with loading manager
+                                const manager = new THREE.LoadingManager();
+                                manager.onProgress = function(url, itemsLoaded, itemsTotal) {
+                                    console.log('Loading model... ', (itemsLoaded / itemsTotal * 100) + '%');
+                                };
+
+                                const loader = new THREE.GLTFLoader(manager);
+                                const modelPath = './models/cute_rabbit.glb'; // Make sure this path is correct
+
+                                loader.load(modelPath, 
+                                    function(gltf) {
+                                        const model = gltf.scene;
+                                        model.scale.set(0.5, 0.5, 0.5);
+                                        model.position.set(0, -1, -5);
+                                        scene.add(model);
+
+                                        // Smooth animation loop
+                                        function animate() {
+                                            requestAnimationFrame(animate);
+                                            model.rotation.y += 0.005;
+                                            model.position.y = -1 + Math.sin(Date.now() * 0.001) * 0.1;
+                                            renderer.render(scene, camera);
+                                        }
+                                        animate();
+                                    },
+                                    function(xhr) {
+                                        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+                                    },
+                                    function(error) {
+                                        console.error('Error loading model:', error);
+                                    }
+                                );
+
+                                // Add floating petals and leaves
+                                const petalGeometries = [
+                                    new THREE.PlaneGeometry(0.3, 0.3),
+                                    new THREE.PlaneGeometry(0.4, 0.2),
+                                    new THREE.PlaneGeometry(0.2, 0.4)
+                                ];
+
+                                const petalMaterials = [
+                                    new THREE.MeshPhongMaterial({
+                                        color: 0xffb7c5,
+                                        transparent: true,
+                                        opacity: 0.6,
+                                        side: THREE.DoubleSide
+                                    }),
+                                    new THREE.MeshPhongMaterial({
+                                        color: 0x90EE90,
+                                        transparent: true,
+                                        opacity: 0.6,
+                                        side: THREE.DoubleSide
+                                    })
+                                ];
+
+                                const petals = [];
+                                for(let i = 0; i < 30; i++) {
+                                    const geometry = petalGeometries[Math.floor(Math.random() * petalGeometries.length)];
+                                    const material = petalMaterials[Math.floor(Math.random() * petalMaterials.length)];
+                                    const petal = new THREE.Mesh(geometry, material);
+                                    
+                                    petal.position.set(
+                                        Math.random() * 20 - 10,
+                                        Math.random() * 20 - 5,
+                                        Math.random() * -20
+                                    );
+                                    
+                                    petal.rotation.set(
+                                        Math.random() * Math.PI,
+                                        Math.random() * Math.PI,
+                                        Math.random() * Math.PI
+                                    );
+
+                                    petal.userData = {
+                                        speed: Math.random() * 0.02 + 0.01,
+                                        rotationSpeed: Math.random() * 0.02 + 0.01,
+                                        sinOffset: Math.random() * Math.PI * 2
+                                    };
+
+                                    petals.push(petal);
+                                    scene.add(petal);
+                                }
+
+                                // Animate petals
+                                function animatePetals() {
+                                    requestAnimationFrame(animatePetals);
+                                    const time = Date.now() * 0.001;
+
+                                    petals.forEach(petal => {
+                                        petal.rotation.x += petal.userData.rotationSpeed;
+                                        petal.rotation.y += petal.userData.rotationSpeed * 0.8;
+                                        petal.position.y += Math.sin(time + petal.userData.sinOffset) * 0.01;
+                                        petal.position.x += Math.cos(time + petal.userData.sinOffset) * 0.01;
+                                        
+                                        // Reset position if petal goes too far
+                                        if(petal.position.y > 10) petal.position.y = -5;
+                                        if(petal.position.x > 10) petal.position.x = -10;
+                                    });
+
+                                    renderer.render(scene, camera);
+                                }
+                                animatePetals();
+
+                                camera.position.z = 5;
+
+                                // Handle window resize
+                                window.addEventListener('resize', () => {
+                                    camera.aspect = window.innerWidth / window.innerHeight;
+                                    camera.updateProjectionMatrix();
+                                    renderer.setSize(window.innerWidth, window.innerHeight);
+                                });
+                            }
+
+                            // Enhanced location services for Varanasi
+                            function initializeVaranasiLocation() {
+                                // Initialize maps with Varanasi coordinates
+                                const emergencyMap = L.map('emergencyMap').setView([VARANASI_LAT, VARANASI_LNG], 13);
+                                const communityMap = L.map('communityMap').setView([VARANASI_LAT, VARANASI_LNG], 13);
+
+                                // Custom map style for both maps
+                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                    attribution: '© OpenStreetMap',
+                                    className: 'map-tiles'
+                                }).addTo(emergencyMap);
+
+                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                    attribution: '© OpenStreetMap',
+                                    className: 'map-tiles'
+                                }).addTo(communityMap);
+
+                                // Add user location with custom marker
+                                const userMarker = L.marker([VARANASI_LAT, VARANASI_LNG], {
+                                    icon: L.divIcon({
+                                        className: 'user-location-marker',
+                                        html: '<div class="pulse"></div>'
+                                    })
+                                }).addTo(emergencyMap);
+
+                                // Add nearby hospitals in Varanasi
+                                const varanasiHospitals = [
+                                    { lat: 25.31668, lng: 83.01041, name: "Sir Sunderlal Hospital (SSL)", hours: "24/7" },
+                                    { lat: 25.31957, lng: 83.00609, name: "Shri Shiv Prasad Gupta Hospital", hours: "24/7" },
+                                    { lat: 25.32037, lng: 83.00897, name: "Heritage IMS Hospital", hours: "24/7" },
+                                    { lat: 25.31772, lng: 83.01234, name: "Galaxy Hospital", hours: "24/7" }
+                                ];
+
+                                varanasiHospitals.forEach(hospital => {
+                                    L.marker([hospital.lat, hospital.lng])
+                                        .addTo(emergencyMap)
+                                        .bindPopup(`
+                                            <div class="hospital-popup">
+                                                <h3>${hospital.name}</h3>
+                                                <p>Hours: ${hospital.hours}</p>
+                                                <button onclick="getDirections(${hospital.lat}, ${hospital.lng})">
+                                                    Get Directions
+                                                </button>
+                                            </div>
+                                        `);
+                                });
+                            }
+
+                            // Add natural elements animation
+                            function createNaturalElements() {
+                                const container = document.getElementById('natureOverlay');
+                                const elements = ['🌸', '🍃', '🌺', '🍂', '🌷', '🎋', '🌿', '🍀'];
+                                
+                                for (let i = 0; i < 15; i++) {
+                                    const element = document.createElement('div');
+                                    element.className = 'floating-element';
+                                    element.textContent = elements[Math.floor(Math.random() * elements.length)];
+                                    element.style.left = Math.random() * 100 + 'vw';
+                                    element.style.animationDelay = (Math.random() * 10) + 's';
+                                    element.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                                    container.appendChild(element);
+                                }
+                            }
+
+                            // Add petal animations
+                            function createPetals() {
+                                const container = document.querySelector('.app-container');
+                                const elements = ['🌸', '🌺', '🌷', '🍀', '🌹', '🌻', '🌼'];
+                                
+                                setInterval(() => {
+                                    const petal = document.createElement('div');
+                                    petal.className = 'petal-animation';
+                                    petal.textContent = elements[Math.floor(Math.random() * elements.length)];
+                                    petal.style.left = Math.random() * 100 + 'vw';
+                                    petal.style.animationDuration = (Math.random() * 8 + 8) + 's';
+                                    container.appendChild(petal);
+                                    
+                                    // Remove petal after animation
+                                    setTimeout(() => petal.remove(), 12000);
+                                }, 1000);
+                            }
+
+                            // Initialize everything when document loads
+                            document.addEventListener('DOMContentLoaded', function() {
+                                setupScene();
+                                initializeVaranasiLocation();
+                                createNaturalElements();
+                                createPetals(); // Start petal animations
+                                
+                                // Show loading indicator
+                                showNotification('Loading 3D elements...', 'info');
+                                
+                                // Initialize other components
+                                // ...existing initialization code...
+                            });
+
+                            // Helper function for directions
+                            function getDirections(lat, lng) {
+                                window.open(`https://www.google.com/maps/dir/${VARANASI_LAT},${VARANASI_LNG}/${lat},${lng}`);
+                            }
+                            if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js');
+  }
+                        </script>
+                    </body>
+                    </html>

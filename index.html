@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartFem - Revolutionary Smart Menstrual Cup</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="icon" type="image/png" href="smartcup (2).png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #9ecfca 0%, #a8c9ba 50%, #9ecfca 100%);
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+        }
+
+        /* Three.js Canvas */
+        #lotus-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Professional Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(25px);
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid rgba(125, 184, 154, 0.1);
+            padding: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+        }
+
+        .navbar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                rgba(125, 184, 154, 0.03) 0%, 
+                rgba(168, 201, 186, 0.02) 25%,
+                rgba(125, 184, 154, 0.03) 50%,
+                rgba(168, 201, 186, 0.02) 75%,
+                rgba(125, 184, 154, 0.03) 100%);
+            z-index: -1;
+        }
+
+        .navbar-decoration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .nav-flower {
+            position: absolute;
+            opacity: 0.1;
+            animation: gentle-sway 8s ease-in-out infinite;
+        }
+
+        .nav-flower:nth-child(2) {
+            animation-delay: -2s;
+        }
+
+        .nav-flower:nth-child(3) {
+            animation-delay: -4s;
+        }
+
+        .nav-flower:nth-child(4) {
+            animation-delay: -6s;
+        }
+
+        @keyframes gentle-sway {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-3px) rotate(1deg);
+            }
+            50% {
+                transform: translateY(0) rotate(0deg);
+            }
+            75% {
+                transform: translateY(-2px) rotate(-1deg);
+            }
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            height: 72px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 2px 4px rgba(125, 184, 154, 0.2));
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1a3d2e;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links li {
+            position: relative;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #2d5e3e;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 1rem 1.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 0 0.2rem;
+        }
+
+        .nav-links a:hover {
+            color: #1a3d2e;
+            background: rgba(125, 184, 154, 0.08);
+        }
+
+        .nav-links a.active {
+            color: #7db89a;
+            background: rgba(125, 184, 154, 0.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            padding: 2rem;
+            opacity: 0;
+            transform: translateY(60px);
+        }
+
+        .hero h1 {
+            font-size: clamp(3.5rem, 8vw, 7rem);
+            font-weight: 300;
+            color: #1a3d2e;
+            margin-bottom: 1.5rem;
+            letter-spacing: -3px;
+            line-height: 0.95;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.4rem, 3vw, 2.2rem);
+            color: #2d5e3e;
+            margin-bottom: 2rem;
+            font-weight: 400;
+            opacity: 0.9;
+            line-height: 1.3;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            color: #4a6b57;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.85;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1.2rem 3rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #7db89a, #a8c9ba);
+            color: white;
+            box-shadow: 0 8px 30px rgba(125, 184, 154, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(125, 184, 154, 0.35);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.9);
+            color: #2d5e3e;
+            border: 2px solid rgba(125, 184, 154, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 1);
+            border-color: rgba(125, 184, 154, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Demo Button Enhancement */
+        .btn-demo {
+            position: relative;
+            background: rgba(255,255,255,0.95);
+            color: #1a3d2e;
+            border: 2px solid #7db89a;
+            box-shadow: 0 0 0 0 rgba(125,184,154,0.15);
+            overflow: hidden;
+            z-index: 1;
+            transition: box-shadow 0.3s;
+            animation: demoPulse 2s infinite;
+        }
+
+        .btn-demo::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -75%;
+            width: 150%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent 0%, rgba(168,201,186,0.15) 40%, rgba(255,255,255,0.6) 50%, rgba(168,201,186,0.15) 60%, transparent 100%);
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 2;
+            transform: skewX(-25deg);
+            animation: shineMove 2.2s linear infinite;
+        }
+
+        @keyframes shineMove {
+            0% { left: -75%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes demoPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(125,184,154,0.15);}
+            50% { box-shadow: 0 0 24px 8px rgba(125,184,154,0.25);}
+        }
+
+        .btn-demo:hover {
+            box-shadow: 0 0 32px 12px rgba(125,184,154,0.35);
+            border-color: #2d5e3e;
+            color: #7db89a;
+            background: #fff;
+        }
+
+        /* Proper Lotus Leaves */
+        .lotus-leaf {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            opacity: 0.95;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .lotus-leaf svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 4px 8px rgba(125, 184, 154, 0.2));
+        }
+
+        .water-ripple {
+            position: absolute;
+            width: 100px;
+            height: 20px;
+            opacity: 0.6;
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        /* Leaf cluster positioning */
+        .leaf-cluster {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Enhanced floating animation */
+        @keyframes gentleFloat {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(2px, -2px) rotate(0.5deg);
+            }
+            50% {
+                transform: translate(0, -4px) rotate(-0.5deg);
+            }
+            75% {
+                transform: translate(-2px, -2px) rotate(0.2deg);
+            }
+        }
+
+        .floating {
+            animation: gentleFloat 8s ease-in-out infinite;
+        }
+
+        .floating:nth-child(2n) {
+            animation-delay: -2s;
+            animation-duration: 9s;
+        }
+
+        .floating:nth-child(3n) {
+            animation-delay: -4s;
+            animation-duration: 7s;
+        }
+
+        /* Ripple effect enhancements */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            animation: rippleEffect 2s linear infinite;
+        }
+
+        @keyframes rippleEffect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Lotus Flowers */
+        .lotus-flower {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            opacity: 0.7;
+            z-index: 6;
+        }
+
+        .lotus-flower svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.1));
+        }
+
+        /* Water Drops */
+        .water-drop {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, rgba(125, 184, 154, 0.8) 0%, rgba(168, 201, 186, 0.4) 70%, transparent 100%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        /* Fish Animation */
+        .koi-fish {
+            position: absolute;
+            width: 30px;
+            height: 15px;
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        .koi-fish svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }        @keyframes swim {
+            0% {
+                transform: translate(0, 0) rotateY(0deg) rotate(5deg) scale(1);
+            }
+            20% {
+                transform: translate(100px, 30px) rotateY(180deg) rotate(-2deg) scale(0.95);
+            }
+            40% {
+                transform: translate(200px, -20px) rotateY(0deg) rotate(3deg) scale(1.05);
+            }
+            60% {
+                transform: translate(300px, 40px) rotateY(180deg) rotate(-4deg) scale(0.98);
+            }
+            80% {
+                transform: translate(150px, -30px) rotateY(0deg) rotate(2deg) scale(1.02);
+            }
+            100% {
+                transform: translate(0, 0) rotateY(0deg) rotate(5deg) scale(1);
+            }
+        }
+
+        /* Fish Schools */
+        .fish-school {
+            position: absolute;
+            animation: school-movement 30s infinite ease-in-out;
+        }
+
+        @keyframes school-movement {
+            0% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+            }
+            25% {
+                transform: translate(200px, 100px) scale(0.9) rotate(-5deg);
+            }
+            50% {
+                transform: translate(400px, -50px) scale(1.1) rotate(5deg);
+            }
+            75% {
+                transform: translate(200px, -100px) scale(0.95) rotate(-3deg);
+            }
+            100% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+            }
+        }
+
+        .fish-swimming {
+            animation: swim 20s infinite;
+            animation-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+        }
+
+        .fish-swimming:nth-child(2n) {
+            animation-duration: 18s;
+            animation-delay: -5s;
+        }
+
+        .fish-swimming:nth-child(3n) {
+            animation-duration: 22s;
+            animation-delay: -8s;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1rem;
+                height: 64px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .hero-content {
+                padding: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 250px;
+            }
+
+            .hero-description {
+                font-size: 1.1rem;
+                margin-bottom: 2rem;
+            }
+        }
+
+        /* Enhanced Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #4a6b57;
+            opacity: 0.6;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .scroll-indicator:hover {
+            opacity: 1;
+        }
+
+        .scroll-text {
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .scroll-arrow {
+            width: 24px;
+            height: 24px;
+            border-right: 2px solid #4a6b57;
+            border-bottom: 2px solid #4a6b57;
+            transform: rotate(45deg);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0) rotate(45deg);
+            }
+            40% {
+                transform: translateY(-8px) rotate(45deg);
+            }
+            60% {
+                transform: translateY(-4px) rotate(45deg);
+            }
+        }
+
+        /* Professional Enhancement */
+        .feature-badges {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #2d5e3e;
+            border: 1px solid rgba(125, 184, 154, 0.2);
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-10px) rotate(2deg);
+            }
+            50% {
+                transform: translateY(-5px) rotate(-1deg);
+            }
+            75% {
+                transform: translateY(-15px) rotate(1deg);
+            }
+        }
+
+        .floating {
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .floating:nth-child(2n) {
+            animation-delay: -2s;
+        }
+
+        .floating:nth-child(3n) {
+            animation-delay: -4s;
+        }
+
+        .floating:nth-child(4n) {
+            animation-delay: -6s;
+        }
+
+        /* Mathematically Accurate Lotus Leaf Styles */
+        .lotus-leaf-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .lotus-leaf {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            opacity: 0.95;
+            pointer-events: none;
+            filter: drop-shadow(0 4px 8px rgba(63, 107, 47, 0.2));
+        }
+
+        .lotus-leaf-notch {
+            fill: none;
+            stroke: rgba(63, 107, 47, 0.3);
+            stroke-width: 0.5;
+        }
+
+        .lotus-leaf-veins {
+            fill: none;
+            stroke: rgba(120, 171, 70, 0.3);
+            stroke-width: 0.5;
+        }
+
+        .lotus-ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(
+                circle at center,
+                rgba(255, 255, 255, 0.2) 0%,
+                rgba(255, 255, 255, 0) 70%
+            );
+            pointer-events: none;
+        }
+
+        @keyframes rippleExpand {
+            0% { transform: scale(0.3); opacity: 0.6; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Three.js Background Canvas -->
+    <canvas id="lotus-canvas"></canvas>
+
+    <!-- Professional Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">            <div class="logo-container">
+                <div class="logo-icon">
+                    <img src="smartcup (2).png" alt="SmartFem Logo" width="40" height="40">
+                </div>
+                <div class="logo">SmartFem</div>
+            </div>            <ul class="nav-links">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="problem.html">Problem</a></li>
+                <li><a href="solution.html">Solution</a></li>
+                <li><a href="https://thebatman2007.github.io/Smart-Menstrual-Cup/main.html">Product</a></li>
+                <li><a href="app/index.html">App Demo</a></li>
+                <li><a href="ai.html">Artemis AI</a></li>
+                <li><a href="community.html" onclick="window.location.href='https://thebatman2007.github.io/Smart-Fem/'">Community</a></li>
+
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <!-- SmartCup image behind and above the heading -->
+            <div class="smartcup-bg">
+                <img src="smartcup (2).png" alt="SmartCup" />
+            </div>
+            <h1>Meet SmartFem.</h1>
+            <p class="hero-subtitle">Your body's new best friend.</p>
+            <p class="hero-description">
+                Experience the future of feminine care with our revolutionary smart menstrual cup. 
+                Advanced sensors track your cycle, health insights powered by AI, and seamless app integration 
+                for complete menstrual wellness management.
+            </p>
+            <div class="hero-buttons" style="justify-content:center;">
+                <a href="https://thebatman2007.github.io/Smart-Fem" class="btn btn-demo" target="_blank" rel="noopener">Try Demo</a>
+            </div>
+            <div class="feature-badges">
+                <div class="badge">FDA Approval soon</div>
+                <div class="badge">24hr+ Protection</div>
+                <div class="badge">Smart Tracking</div>
+                <div class="badge">Eco-Friendly</div>
+            </div>
+        </div>
+        
+
+    </section>    <!-- Proper Lotus Leaves -->
+    <!-- Top Left Corner Group -->
+    <div class="lotus-leaf floating" style="top: 5%; left: 5%; transform: scale(1.2);">
+        <svg viewBox="0 0 100 100">
+            <path d="M50 10 C25 10, 10 25, 10 50 C10 75, 25 90, 50 90 C75 90, 90 75, 90 50 C90 25, 75 10, 50 10 Z" 
+                  fill="rgba(125, 184, 154, 0.4)" stroke="rgba(125, 184, 154, 0.6)" stroke-width="1"/>
+            <path d="M50 10 Q50 50 50 90 M10 50 Q50 50 90 50" stroke="rgba(125, 184, 154, 0.3)" stroke-width="0.5"/>
+            <circle cx="50" cy="20" r="2" fill="rgba(125, 184, 154, 0.8)"/>
+        </svg>
+    </div>
+    <div class="lotus-leaf floating" style="top: 8%; left: 15%; transform: scale(0.9) rotate(45deg);">
+        <svg viewBox="0 0 100 100">
+            <path d="M50 10 C30 10, 10 30, 10 50 C10 70, 30 90, 50 90 C70 90, 90 70, 90 50 C90 30, 70 10, 50 10 Z" 
+                  fill="rgba(125, 184, 154, 0.35)" stroke="rgba(125, 184, 154, 0.55)" stroke-width="1"/>
+            <path d="M50 10 Q50 50 50 90 M10 50 Q50 50 90 50" stroke="rgba(125, 184, 154, 0.25)" stroke-width="0.5"/>
+        </svg>
+    </div>
+    <div class="lotus-leaf floating" style="top: 15%; left: 3%; transform: scale(0.7) rotate(-15deg);">
+        <svg viewBox="0 0 100 100">
+            <path d="M50 10 C20 10, 5 30, 5 50 C5 70, 20 90, 50 90 C80 90, 95 70, 95 50 C95 30, 80 10, 50 10 Z" 
+                  fill="rgba(168, 201, 186, 0.4)" stroke="rgba(168, 201, 186, 0.6)" stroke-width="1"/>
+            <path d="M50 10 Q50 50 50 90 M10 50 Q50 50 90 50" stroke="rgba(168, 201, 186, 0.3)" stroke-width="0.5"/>
+        </svg>
+    </div>
+
+    <div class="lotus-leaf floating" style="top: 5%; right: 5%; transform: scale(1.1) rotate(15deg);">
+        <svg viewBox="0 0 100 100">
+            <path d="M50 10 C25 10, 10 25, 10 50 C10 75, 25 90, 50 90 C75 90, 90 75, 90 50 C90 25, 75 10, 50 10 Z" 
+                  fill="rgba(168, 201, 186, 0.45)" stroke="rgba(168, 201, 186, 0.65)" stroke-width="1"/>
+            <path d="M50 10 Q50 50 50 90 M10 50 Q50 50 90 50" stroke="rgba(168, 201, 186, 0.35)" stroke-width="0.5"/>
+        </svg>
+    </div>
+    <div class="lotus-leaf floating" style="top: 12%; right: 12%; transform: scale(0.85) rotate(-25deg);">
+        <svg viewBox="0 0 100 100">
+            <path d="M50 10 C30 10, 10 30, 10 50 C10 70, 30 90, 50 90 C70 90, 90 70, 90 50 C90 30, 70 10, 50 10 Z" 
+                  fill="rgba(125, 184, 154, 0.35)" stroke="rgba(125, 184, 154, 0.55)" stroke-width="1"/>
+            <path d="M50 10 Q50 50 50 90 M10 50 Q50 50 90 50" stroke="rgba(125, 184, 154, 0.25)" stroke-width="0.5"/>
+        </svg>                                                                  
+    </div>
+
+    <!-- Bottom Left Corner Group -->
+    <div class="lotus-leaf floating" style="bottom: 8%; left: 5%; transform: scale(1.15) rotate(-10deg);">
+        <svg viewBox="0 0 100 100">
+            <path d="M50 10 C25 10, 10 25, 10 50 C10 75, 25 90, 50 90 C75 90, 90 75, 90 50 C90 25, 75 10, 50 10 Z" 
+                  fill="rgba(125, 184, 154, 0.4)" stroke="rgba(125, 184, 154, 0.6)" stroke-width="1"/>
+            <path d="M50 10 Q50 50 50 90 M10 50 Q50 50 90 50" stroke="rgba(125, 184, 154, 0.3)" stroke-width="0.5"/>
+        </svg>
+    </div>
+    <div class="lotus-leaf floating" style="bottom: 15%; left: 15%; transform: scale(0.9) rotate(30deg);">
+        <svg viewBox="0 0 100 100">
+            <path d="M50 10 C30 10, 10 30, 10 50 C10 70, 30 90, 50 90 C70 90, 90 70, 90 50 C90 30, 70 10, 50 10 Z" 
+                  fill="rgba(168, 201, 186, 0.4)" stroke="rgba(168, 201, 186, 0.6)" stroke-width="1"/>
+            <path d="M50 10 Q50 50 50 90 M10 50 Q50 50 90 50" stroke="rgba(168, 201, 186, 0.3)" stroke-width="0.5"/>
+        </svg>
+    </div>
+
+    <!-- Bottom Right Corner Group -->
+    <div class="lotus-leaf floating" style="bottom: 5%; right: 8%; transform: scale(1.2) rotate(20deg);">
+        <svg viewBox="0 0 100 100">
+            <path d="M50 10 C25 10, 10 25, 10 50 C10 75, 25 90, 50 90 C75 90, 90 75, 90 50 C90 25, 75 10, 50 10 Z" 
+                  fill="rgba(125, 184, 154, 0.4)" stroke="rgba(125, 184, 154, 0.6)" stroke-width="1"/>
+            <path d="M50 10 Q50 50 50 90 M10 50 Q50 50 90 50" stroke="rgba(125, 184, 154, 0.3)" stroke-width="0.5"/>
+        </svg>
+    </div>
+
+    <!-- Lotus Flowers -->
+    <div class="lotus-flower floating" style="top: 25%; left: 25%;">
+        <svg viewBox="0 0 80 80">
+            <g transform="translate(40,40)">
+                <ellipse cx="0" cy="-15" rx="8" ry="20" fill="rgba(255, 182, 193, 0.8)" transform="rotate(0)"/>
+                <ellipse cx="0" cy="-15" rx="8" ry="20" fill="rgba(255, 182, 193, 0.8)" transform="rotate(72)"/>
+                <ellipse cx="0" cy="-15" rx="8" ry="20" fill="rgba(255, 182, 193, 0.8)" transform="rotate(144)"/>
+                <ellipse cx="0" cy="-15" rx="8" ry="20" fill="rgba(255, 182, 193, 0.8)" transform="rotate(216)"/>
+                <ellipse cx="0" cy="-15" rx="8" ry="20" fill="rgba(255, 182, 193, 0.8)" transform="rotate(288)"/>
+                <circle cx="0" cy="0" r="4" fill="rgba(255, 215, 0, 0.8)"/>
+            </g>
+        </svg>
+    </div>
+
+    <div class="lotus-flower floating" style="top: 55%; left: 70%;">
+        <svg viewBox="0 0 80 80">
+            <g transform="translate(40,40)">
+                <ellipse cx="0" cy="-15" rx="8" ry="20" fill="rgba(255, 192, 203, 0.7)" transform="rotate(0)"/>
+                <ellipse cx="0" cy="-15" rx="8" ry="20" fill="rgba(255, 192, 203, 0.7)" transform="rotate(72)"/>
+                <ellipse cx="0" cy="-15" rx="8" ry="20" fill="rgba(255, 192, 203, 0.7)" transform="rotate(144)"/>
+                <ellipse cx="0" cy="-15" rx="8" ry="20" fill="rgba(255, 192, 203, 0.7)" transform="rotate(216)"/>
+                <ellipse cx="0" cy="-15" rx="8" ry="20" fill="rgba(255, 192, 203, 0.7)" transform="rotate(288)"/>
+                <circle cx="0" cy="0" r="4" fill="rgba(255, 215, 0, 0.7)"/>
+            </g>
+        </svg>
+    </div>    <!-- School of Koi Fish -->
+    <div class="fish-school">
+        <!-- Main Group -->
+        <div class="koi-fish fish-swimming" style="top: 40%; left: 20%;">
+            <svg viewBox="0 0 50 30">
+                <path d="M5 15 C15 5, 35 5, 45 15 C35 25, 15 25, 5 15" fill="rgba(255, 145, 145, 0.8)"/>
+                <path d="M45 15 L50 15 L45 20 L45 10 Z" fill="rgba(255, 145, 145, 0.8)"/>
+                <circle cx="10" cy="15" r="2" fill="rgba(0, 0, 0, 0.6)"/>
+            </svg>
+        </div>
+        <div class="koi-fish fish-swimming" style="top: 42%; left: 22%; animation-delay: -0.2s;">
+            <svg viewBox="0 0 50 30">
+                <path d="M5 15 C15 5, 35 5, 45 15 C35 25, 15 25, 5 15" fill="rgba(255, 255, 255, 0.8)"/>
+                <path d="M45 15 L50 15 L45 20 L45 10 Z" fill="rgba(255, 255, 255, 0.8)"/>
+                <circle cx="10" cy="15" r="2" fill="rgba(0, 0, 0, 0.6)"/>
+            </svg>
+        </div>
+        <div class="koi-fish fish-swimming" style="top: 38%; left: 23%; animation-delay: -0.4s;">
+            <svg viewBox="0 0 50 30">
+                <path d="M5 15 C15 5, 35 5, 45 15 C35 25, 15 25, 5 15" fill="rgba(255, 185, 145, 0.8)"/>
+                <path d="M45 15 L50 15 L45 20 L45 10 Z" fill="rgba(255, 185, 145, 0.8)"/>
+                <circle cx="10" cy="15" r="2" fill="rgba(0, 0, 0, 0.6)"/>
+            </svg>
+        </div>
+
+        <!-- Secondary Group -->
+        <div class="koi-fish fish-swimming" style="top: 45%; left: 25%; animation-delay: -2s;">
+            <svg viewBox="0 0 50 30">
+                <path d="M5 15 C15 5, 35 5, 45 15 C35 25, 15 25, 5 15" fill="rgba(255, 215, 145, 0.8)"/>
+                <path d="M45 15 L50 15 L45 20 L45 10 Z" fill="rgba(255, 215, 145, 0.8)"/>
+                <circle cx="10" cy="15" r="2" fill="rgba(0, 0, 0, 0.6)"/>
+            </svg>
+        </div>
+        <div class="koi-fish fish-swimming" style="top: 43%; left: 27%; animation-delay: -2.2s;">
+            <svg viewBox="0 0 50 30">
+                <path d="M5 15 C15 5, 35 5, 45 15 C35 25, 15 25, 5 15" fill="rgba(255, 165, 145, 0.8)"/>
+                <path d="M45 15 L50 15 L45 20 L45 10 Z" fill="rgba(255, 165, 145, 0.8)"/>
+                <circle cx="10" cy="15" r="2" fill="rgba(0, 0, 0, 0.6)"/>
+            </svg>
+        </div>
+
+        <!-- Third Group -->
+        <div class="koi-fish fish-swimming" style="top: 35%; left: 18%; animation-delay: -4s;">
+            <svg viewBox="0 0 50 30">
+                <path d="M5 15 C15 5, 35 5, 45 15 C35 25, 15 25, 5 15" fill="rgba(255, 195, 175, 0.8)"/>
+                <path d="M45 15 L50 15 L45 20 L45 10 Z" fill="rgba(255, 195, 175, 0.8)"/>
+                <circle cx="10" cy="15" r="2" fill="rgba(0, 0, 0, 0.6)"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Second School of Fish -->
+    <div class="fish-school" style="animation-delay: -10s;">
+        <!-- Add 5 more fish with similar structure but different positions and colors -->
+        <div class="koi-fish fish-swimming" style="top: 60%; left: 60%;">
+            <svg viewBox="0 0 50 30">
+                <path d="M5 15 C15 5, 35 5, 45 15 C35 25, 15 25, 5 15" fill="rgba(255, 225, 195, 0.8)"/>
+                <path d="M45 15 L50 15 L45 20 L45 10 Z" fill="rgba(255, 225, 195, 0.8)"/>
+                <circle cx="10" cy="15" r="2" fill="rgba(0, 0, 0, 0.6)"/>
+            </svg>
+        </div>
+        <!-- Add more fish for the second school -->
+    
+    <!-- Multiple Fish Schools -->
+    <!-- Center Group -->
+    <div class="fish-school" style="top: 50%; left: 50%; transform-origin: center;">
+        <div class="koi-fish fish-swimming" style="--delay: 0s;">
+            <svg viewBox="0 0 50 30">
+                <path d="M5 15 C15 5, 35 5, 45 15 C35 25, 15 25, 5 15" fill="rgba(255, 145, 145, 0.8)"/>
+                <path d="M45 15 L50 15 L45 20 L45 10 Z" fill="rgba(255, 145, 145, 0.8)"/>
+                <circle cx="10" cy="15" r="2" fill="rgba(0, 0, 0, 0.6)"/>
+            </svg>
+        </div>
+        <!-- Add 4 more fish to center group with different colors -->
+        <div class="koi-fish fish-swimming" style="--delay: -1s;">
+            <svg viewBox="0 0 50 30">
+                <path d="M5 15 C15 5, 35 5, 45 15 C35 25, 15 25, 5 15" fill="rgba(255, 215, 145, 0.8)"/>
+                <path d="M45 15 L50 15 L45 20 L45 10 Z" fill="rgba(255, 215, 145, 0.8)"/>
+                <circle cx="10" cy="15" r="2" fill="rgba(0, 0, 0, 0.6)"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Top-Left Group -->
+    <div class="fish-school" style="top: 20%; left: 20%; transform-origin: center;">
+        <!-- Add 3 fish with orange-white patterns -->
+        <div class="koi-fish fish-swimming small-fish" style="--delay: -2s;">
+            <svg viewBox="0 0 50 30">
+                <path d="M5 15 C15 5, 35 5, 45 15 C35 25, 15 25, 5 15" fill="rgba(255, 185, 125, 0.8)"/>
+                <path d="M45 15 L50 15 L45 20 L45 10 Z" fill="rgba(255, 185, 125, 0.8)"/>
+                <circle cx="10" cy="15" r="2" fill="rgba(0, 0, 0, 0.6)"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Bottom-Right Group -->
+    <div class="fish-school" style="bottom: 30%; right: 25%; transform-origin: center;">
+        <!-- Add 4 fish with white-red patterns -->
+        <div class="koi-fish fish-swimming large-fish" style="--delay: -3s;">
+            <svg viewBox="0 0 50 30">
+                <path d="M5 15 C15 5, 35 5, 45 15 C35 25, 15 25, 5 15" fill="rgba(255, 155, 155, 0.8)"/>
+                <path d="M45 15 L50 15 L45 20 L45 10 Z" fill="rgba(255, 155, 155, 0.8)"/>
+                <circle cx="10" cy="15" r="2" fill="rgba(0, 0, 0, 0.6)"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Add fish size variations -->
+    <style>
+        .small-fish {
+            transform: scale(0.7);
+        }
+        .large-fish {
+            transform: scale(1.3);
+        }
+        .fish-swimming {
+            --delay: 0s;
+            animation-delay: var(--delay);
+        }
+    </style>
+
+    <!-- Improved Water Drops -->
+    <div class="water-drops"></div>
+
+    <script>
+        // Three.js Realistic Lotus Pond
+        let scene, camera, renderer, water;
+        let waterDrops = [];
+
+        function initThreeJS() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ 
+                canvas: document.getElementById('lotus-canvas'), 
+                antialias: true, 
+                alpha: true,
+                logarithmicDepthBuffer: true
+            });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000, 0);
+
+            // Enhanced water surface with more realistic effects
+            const waterGeometry = new THREE.PlaneGeometry(100, 100, 256, 256); // Increased resolution
+            const waterTexture = new THREE.TextureLoader().load('https://threejs.org/examples/textures/waternormals.jpg');
+            waterTexture.wrapS = waterTexture.wrapT = THREE.RepeatWrapping;
+            waterTexture.repeat.set(4, 4); // Tighter ripple pattern
+
+            const waterMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0x70c8c2,
+                transparent: true,
+                opacity: 0.85,
+                metalness: 0.1,
+                roughness: 0.2,
+                clearcoat: 0.4,
+                clearcoatRoughness: 0.2,
+                normalMap: waterTexture,
+                normalScale: new THREE.Vector2(1.5, 1.5),
+                envMapIntensity: 1.5,
+                side: THREE.DoubleSide
+            });
+
+            water = new THREE.Mesh(waterGeometry, waterMaterial);
+            water.rotation.x = -Math.PI / 2;
+            scene.add(water);
+
+            // Enhanced lighting for better water reflections
+            const ambientLight = new THREE.AmbientLight(0x7db89a, 0.6);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(10, 20, 10);
+            directionalLight.castShadow = true;
+            scene.add(directionalLight);
+
+            // Add subtle point lights for enhanced water shimmer
+            const pointLight1 = new THREE.PointLight(0xa8c9ba, 0.5);
+            pointLight1.position.set(20, 15, 20);
+            scene.add(pointLight1);
+
+            const pointLight2 = new THREE.PointLight(0x9ecfca, 0.5);
+            pointLight2.position.set(-20, 15, -20);
+            scene.add(pointLight2);
+
+            camera.position.set(0, 25, 30);
+            camera.lookAt(0, 0, 0);
+
+            // Start water animations
+            animate();
+        }
+
+        function createRealistic3DLeaves() {
+            for (let i = 0; i < 12; i++) {
+                // Create lily pad shape
+                const leafGeometry = new THREE.CircleGeometry(3, 16);
+                const leafMaterial = new THREE.MeshBasicMaterial({
+                    color: i % 2 === 0 ? 0x7db89a : 0xa8c9ba,
+                    transparent: true,
+                    opacity: 0.6,
+                    side: THREE.DoubleSide
+                });
+                const leaf = new THREE.Mesh(leafGeometry, leafMaterial);
+                
+                // Add notch to make it look like a real lily pad
+                const notchGeometry = new THREE.RingGeometry(0, 0.5, 8);
+                const notch = new THREE.Mesh(notchGeometry, leafMaterial);
+                notch.position.set(2.5, 0.01, 0);
+                leaf.add(notch);
+                
+                leaf.position.x = (Math.random() - 0.5) * 60;
+                leaf.position.z = (Math.random() - 0.5) * 60;
+                leaf.position.y = 0.1;
+                leaf.rotation.x = -Math.PI / 2 + (Math.random() - 0.5) * 0.2;
+                leaf.rotation.z = Math.random() * Math.PI;
+                
+                scene.add(leaf);
+            }
+        }
+
+        function createWaterDrop() {
+            // Create HTML water drop element
+            const drop = document.createElement('div');
+            drop.className = 'water-drop';
+            drop.style.left = Math.random() * window.innerWidth + 'px';
+            drop.style.top = Math.random() * window.innerHeight + 'px';
+            document.body.appendChild(drop);
+
+            // Animate the drop
+            anime({
+                targets: drop,
+                scale: [0, 1.5, 0],
+                opacity: [0, 0.8, 0],
+                duration: 3000,
+                easing: 'easeInOutCubic',
+                complete: () => {
+                    drop.remove();
+                }
+            });
+
+            // Create ripple effect in 3D water
+            createWaterRipple(
+                (parseFloat(drop.style.left) / window.innerWidth - 0.5) * 100,
+                (parseFloat(drop.style.top) / window.innerHeight - 0.5) * 100
+            );
+        }
+
+        function createWaterRipple(x, z) {
+            // Create multiple overlapping ripples for more realism
+            const createSingleRipple = (radius, delay) => {
+                const rippleGeometry = new THREE.RingGeometry(0, radius, 32);
+                const rippleMaterial = new THREE.MeshBasicMaterial({
+                    color: 0xa8c9ba,
+                    transparent: true,
+                    opacity: 0.4,
+                    side: THREE.DoubleSide,
+                    blending: THREE.AdditiveBlending
+                });
+                const ripple = new THREE.Mesh(rippleGeometry, rippleMaterial);
+                ripple.position.set(x, 0.2, z);
+                ripple.rotation.x = -Math.PI / 2;
+                scene.add(ripple);
+
+                // Animate with physics-based easing
+                const tween = {scale: 0, opacity: 0.4};
+                anime({
+                    targets: tween,
+                    scale: 2,
+                    opacity: 0,
+                    delay: delay,
+                    duration: 2000,
+                    easing: 'easeOutExpo',
+                    update: () => {
+                        ripple.scale.setScalar(tween.scale);
+                        ripple.material.opacity = tween.opacity * (1 - tween.scale / 2);
+                    },
+                    complete: () => {
+                        scene.remove(ripple);
+                        ripple.geometry.dispose();
+                        ripple.material.dispose();
+                    }
+                });
+            };
+
+            // Create multiple ripples with different sizes and delays
+            createSingleRipple(4, 0);
+            createSingleRipple(3, 100);
+            createSingleRipple(5, 200);
+        }        function animate() {
+            requestAnimationFrame(animate);
+
+            // Complex water animation with multiple wave patterns
+            const time = Date.now() * 0.0003;
+            const vertices = water.geometry.attributes.position.array;
+            
+            for (let i = 0; i < vertices.length; i += 3) {
+                const x = vertices[i];
+                const z = vertices[i + 2];
+                const distance = Math.sqrt(x * x + z * z);
+                
+                // Combine multiple wave patterns for more realistic water movement
+                vertices[i + 1] = 
+                    Math.sin(x * 0.05 + time) * 0.15 + // Primary wave
+                    Math.cos(z * 0.05 + time * 0.8) * 0.1 + // Secondary wave
+                    Math.sin(distance * 0.03 + time * 1.2) * 0.08 + // Circular ripple
+                    Math.sin(x * 0.1 + z * 0.1 + time * 1.5) * 0.05 + // Diagonal wave
+                    Math.cos(distance * 0.04 - time * 0.7) * 0.06 + // Additional ripple
+                    Math.sin((x + z) * 0.05 + time) * 0.04; // Cross wave pattern
+            }
+            
+            water.geometry.attributes.position.needsUpdate = true;
+
+            // Animate water texture for flowing effect
+            if (water.material.normalMap) {
+                water.material.normalMap.offset.x = time * 0.2;
+                water.material.normalMap.offset.y = time * 0.1;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Initialize everything
+        initThreeJS();
+
+        // Enhanced Anime.js Animations
+        function initAnimations() {
+            // Hero content staggered animation
+            anime.timeline({
+                easing: 'easeOutExpo',
+                duration: 1000
+            })
+            .add({
+                targets: '.hero-content',
+                opacity: [0, 1],
+                translateY: [60, 0],
+                duration: 1200,
+                delay: 600
+            })
+            .add({
+                targets: '.hero h1',
+                opacity: [0, 1],
+                translateY: [30, 0],
+                duration: 800,
+                delay: -800
+            })
+            .add({
+                targets: '.hero-subtitle',
+                opacity: [0, 1],
+                translateY: [20, 0],
+                duration: 600,
+                delay: -600
+            })
+            .add({
+                targets: '.hero-description',
+                opacity: [0, 1],
+                translateY: [15, 0],
+                duration: 500,
+                delay: -400
+            })
+            .add({
+                targets: '.btn',
+                scale: [0.8, 1],
+                opacity: [0, 1],
+                duration: 600,
+                delay: anime.stagger(100, {start: -300})
+            })
+            .add({
+                targets: '.badge',
+                scale: [0.8, 1],
+                opacity: [0, 1],
+                duration: 400,
+                delay: anime.stagger(50, {start: -200})
+            });
+        }
+
+        // Professional button interactions
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                anime({
+                    targets: this,
+                    scale: 1.05,
+                    duration: 300,
+                    easing: 'easeOutCubic'
+                });
+            });
+
+            btn.addEventListener('mouseleave', function() {
+                anime({
+                    targets: this,
+                    scale: 1,
+                    duration: 300,
+                    easing: 'easeOutCubic'
+                });
+            });
+        });
+
+        // Enhanced navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                navbar.style.backdropFilter = 'blur(30px)';
+                navbar.style.boxShadow = '0 4px 25px rgba(0, 0, 0, 0.05)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.backdropFilter = 'blur(25px)';
+                navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.02)';
+            }
+        });
+
+        // Resize handler
+        window.addEventListener('resize', function() {
+            if (renderer && camera) {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        });
+
+        // Initialize animations when page loads
+        window.addEventListener('load', initAnimations);
+
+        // Professional smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Random water drops throughout the session
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                createWaterDrop();
+            }
+        }, 3000);        function generateLotusLeafPath(R, a, n, phi, delta) {
+            let path = '';
+            const steps = 100;
+            const angleStep = (2 * Math.PI) / steps;
+            
+            for (let i = 0; i <= steps; i++) {
+                const theta = i * angleStep;
+                
+                // Enhanced polar function for more realistic leaf shape
+                let r;
+                const baseR = R * (1 + a * Math.sin(n * theta + phi));
+                const bowlEffect = Math.cos(theta * 2) * 0.2; // Creates a subtle bowl-like shape
+                const edgeCurve = Math.sin(theta * 8) * 0.05; // Adds natural edge variations
+                
+                if (Math.abs(theta) < delta || Math.abs(theta - 2 * Math.PI) < delta) {
+                    r = baseR * 0.4 * (1 + bowlEffect + edgeCurve); // Notch with natural curves
+                } else {
+                    r = baseR * (1 + bowlEffect + edgeCurve);
+                }
+                
+                const x = r * Math.cos(theta);
+                const y = r * Math.sin(theta);
+                
+                if (i === 0) {
+                    path += `M ${x + 50} ${y + 50}`; // Center at 50,50
+                } else {
+                    path += ` L ${x + 50} ${y + 50}`;
+                }
+            }
+            
+            return path;
+        }
+
+        // Create mathematically accurate lotus leaf
+        function createMathematicalLotusLeaf(x, y, scale, rotation) {
+            const leaf = document.createElement('div');
+            leaf.className = 'lotus-leaf floating';
+            leaf.style.left = x + '%';
+            leaf.style.top = y + '%';
+            leaf.style.transform = `scale(${scale}) rotate(${rotation}deg)`;
+            
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('viewBox', '0 0 100 100');
+            
+            // Main leaf path
+            const leafPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            const pathData = generateLotusLeafPath(40, 0.1, 8, 0, Math.PI / 18);
+            leafPath.setAttribute('d', pathData);
+            leafPath.setAttribute('fill', 'url(#lotusLeafGradient)');
+            leafPath.setAttribute('filter', 'url(#leafShadow)');
+            
+            // Veins
+            const veins = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            veins.setAttribute('class', 'lotus-leaf-veins');
+            
+            // Enhanced vein pattern with more natural branching
+            const veinPattern = `
+                M50 10 Q50 50 50 90
+                M20 50 Q50 45 80 50
+                M25 30 Q50 35 75 30
+                M25 70 Q50 65 75 70
+                M35 40 Q50 42 65 40
+                M35 60 Q50 58 65 60
+                M40 20 Q50 25 60 20
+                M40 80 Q50 75 60 80
+            `;
+            veins.setAttribute('d', veinPattern.trim());
+            
+            // Add 3D bowl effect with gradient
+            const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'radialGradient');
+            gradient.setAttribute('id', 'leafGradient-' + Math.random().toString(36).substr(2, 9));
+            gradient.innerHTML = `
+                <stop offset="0%" style="stop-color:rgba(125, 184, 154, 0.6)"/>
+                <stop offset="80%" style="stop-color:rgba(125, 184, 154, 0.4)"/>
+                <stop offset="100%" style="stop-color:rgba(125, 184, 154, 0.3)"/>
+            `;
+            svg.appendChild(gradient);
+            leafPath.setAttribute('fill', 'url(#' + gradient.id + ')');
+            
+            svg.appendChild(leafPath);
+            svg.appendChild(veins);
+            leaf.appendChild(svg);
+            
+            return leaf;
+        }
+
+        // Generate and add multiple mathematical lotus leaves
+        for (let i = 0; i < 8; i++) {
+            const x = Math.random() * 100;
+            const y = Math.random() * 100;
+            const scale = 0.5 + Math.random() * 0.5;
+            const rotation = Math.random() * 360;
+            document.body.appendChild(createMathematicalLotusLeaf(x, y, scale, rotation));
+        }        function distributeLotusLeaves() {
+            const container = document.createElement('div');
+            container.className = 'lotus-leaf-container';
+            
+            // Function to check text overlap
+            function isTextOverlap(x, y) {
+                const textElements = document.querySelectorAll('h1, h2, p, .hero-content');
+                const margin = 50; // Minimum distance from text
+                
+                for (const element of textElements) {
+                    const rect = element.getBoundingClientRect();
+                    const centerX = x * window.innerWidth / 100;
+                    const centerY = y * window.innerHeight / 100;
+                    
+                    if (centerX > rect.left - margin && centerX < rect.right + margin &&
+                        centerY > rect.top - margin && centerY < rect.bottom + margin) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            
+            // Enhanced text overlap detection with dynamic margin
+            function isTextOverlap(x, y, leafSize) {
+                const textElements = document.querySelectorAll('h1, h2, p, .hero-content, .nav-links, .logo');
+                const margin = leafSize * 1.5; // Dynamic margin based on leaf size
+                
+                for (const element of textElements) {
+                    const rect = element.getBoundingClientRect();
+                    const centerX = x * window.innerWidth / 100;
+                    const centerY = y * window.innerHeight / 100;
+                    
+                    // Add padding around text elements
+                    const extendedRect = {
+                        left: rect.left - margin,
+                        right: rect.right + margin,
+                        top: rect.top - margin,
+                        bottom: rect.bottom + margin
+                    };
+                    
+                    if (centerX > extendedRect.left && centerX < extendedRect.right &&
+                        centerY > extendedRect.top && centerY < extendedRect.bottom) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            // Enhanced natural distribution with clustering
+            function findValidPosition(baseX, baseY, range, leafSize) {
+                let attempts = 0;
+                const maxAttempts = 15;
+                
+                while (attempts < maxAttempts) {
+                    const x = baseX + (Math.random() - 0.5) * range;
+                    const y = baseY + (Math.random() - 0.5) * range;
+                    
+                    if (!isTextOverlap(x, y, leafSize)) {
+                        return { x, y };
+                    }
+                    attempts++;
+                }
+                return null;
+            }
+
+            // Apply the enhanced distribution
+            const leafClusters = [
+                { baseX: 10, baseY: 10, count: 3, range: 15 },
+                { baseX: 90, baseY: 20, count: 3, range: 15 },
+                { baseX: 15, baseY: 80, count: 3, range: 15 },
+                { baseX: 85, baseY: 70, count: 3, range: 15 }
+            ];
+
+            leafClusters.forEach(cluster => {
+                for (let i = 0; i < cluster.count; i++) {
+                    const leafSize = 80 + Math.random() * 40;
+                    const position = findValidPosition(cluster.baseX, cluster.baseY, cluster.range, leafSize);
+                    
+                    if (position) {
+                        const scale = leafSize / 200;
+                        const rotation = Math.random() * 360;
+                        container.appendChild(createMathematicalLotusLeaf(position.x, position.y, scale, rotation));
+                    }
+                }
+            });
+            
+            document.body.appendChild(container);
+        }
+
+        // Distribute lotus leaves around the screen edges
+        distributeLotusLeaves();
+    </script>
+    <!-- Additional Fish Schools -->
+    <!-- Top Right School -->
+    <div class="fish-school fish-school-tr" style="top: 15%; right: 15%;">
+        <div class="koi-fish fish-swimming" style="animation-delay: -1.5s;">
+            <svg viewBox="0 0 50 30">
+                <path d="M5 15 C15 5, 35 5, 45 15 C35 25, 15 25, 5 15" fill="rgba(255, 235, 205, 0.8)"/>
+                <path d="M45 15 L50 15 L45 20 L45 10 Z" fill="rgba(255, 235, 205, 0.8)"/>
+                <circle cx="10" cy="15" r="2" fill="rgba(0, 0, 0, 0.6)"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Bottom Left School -->
+    <div class="fish-school fish-school-bl" style="bottom: 20%; left: 20%;">
+        <div class="koi-fish fish-swimming large-fish" style="animation-delay: -3s;">
+            <svg viewBox="0 0 50 30">
+                <path d="M5 15 C15 5, 35 5, 45 15 C35 25, 15 25, 5 15" fill="rgba(255, 205, 185, 0.8)"/>
+                <path d="M45 15 L50 15 L45 20 L45 10 Z" fill="rgba(255, 205, 185, 0.8)"/>
+                <circle cx="10" cy="15" r="2" fill="rgba(0, 0, 0, 0.6)"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Center School -->
+    <div class="fish-school fish-school-center" style="top: 45%; left: 45%;">
+        <div class="koi-fish fish-swimming" style="animation-delay: -0.5s;">
+            <svg viewBox="0 0 50 30">
+                <path d="M5 15 C15 5, 35 5, 45 15 C35 25, 15 25, 5 15" fill="rgba(255, 195, 165, 0.8)"/>
+                <path d="M45 15 L50 15 L45 20 L45 10 Z" fill="rgba(255, 195, 165, 0.8)"/>
+                <circle cx="10" cy="15" r="2" fill="rgba(0, 0, 0, 0.6)"/>
+            </svg>
+        </div>
+    </div>
+
+    <style>
+        /* Enhanced Fish School Animations */
+        .fish-school-tr {
+            animation: schoolSwimTR 25s infinite;
+        }
+        .fish-school-bl {
+            animation: schoolSwimBL 30s infinite;
+        }
+        .fish-school-center {
+            animation: schoolSwimCenter 35s infinite;
+        }
+        .fish-school-tl {
+            animation: schoolSwimTL 28s infinite;
+        }
+        .fish-school-br {
+            animation: schoolSwimBR 32s infinite;
+        }
+        .fish-school-ml {
+            animation: schoolSwimML 27s infinite;
+        }
+        .fish-school-mr {
+            animation: schoolSwimMR 29s infinite;
+        }
+
+        @keyframes schoolSwimTR {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-100px, 50px) rotate(-15deg); }
+            50% { transform: translate(-50px, 150px) rotate(10deg); }
+            75% { transform: translate(100px, 100px) rotate(-5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        @keyframes schoolSwimBL {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(150px, -100px) rotate(15deg); }
+            50% { transform: translate(200px, 0px) rotate(-10deg); }
+            75% { transform: translate(50px, -150px) rotate(5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        @keyframes schoolSwimCenter {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            33% { transform: translate(-200px, -100px) scale(0.8) rotate(-10deg); }
+            66% { transform: translate(200px, 100px) scale(1.2) rotate(10deg); }
+            100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+        }
+
+        @keyframes schoolSwimTL {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(100px, 100px) rotate(15deg); }
+            66% { transform: translate(50px, 150px) rotate(-10deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        @keyframes schoolSwimBR {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(-150px, -100px) rotate(-15deg); }
+            66% { transform: translate(-100px, -50px) rotate(10deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        @keyframes schoolSwimML {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(200px, -50px) scale(0.9); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        @keyframes schoolSwimMR {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-200px, 50px) scale(1.1); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+    </style>
+    <!-- Additional Fish for Each School -->
+    <!-- Top Right School Additional Fish -->
+    <div class="fish-school fish-school-tr" style="top: 18%; right: 18%;">
+        <div class="koi-fish fish-swimming small-fish" style="animation-delay: -2s;">
+            <svg viewBox="0 0 50 30">
+                <path d="M5 15 C15 5, 35 5, 45 15 C35 25, 15 25, 5 15" fill="rgba(245, 225, 195, 0.8)"/>
+                <path d="M45 15 L50 15 L45 20 L45 10 Z" fill="rgba(245, 225, 195, 0.8)"/>
+                <circle cx="10" cy="15" r="2" fill="rgba(0, 0, 0, 0.6)"/>
+            </svg>
+        </div>
+        <div class="koi-fish fish-swimming" style="animation-delay: -2.5s;">
+            <svg viewBox="0 0 50 30">
+                <path d="M5 15 C15 5, 35 5, 45 15 C35 25, 15 25, 5 15" fill="rgba(255, 215, 185, 0.8)"/>
+                <path d="M45 15 L50 15 L45 20 L45 10 Z" fill="rgba(255, 215, 185, 0.8)"/>
+                <circle cx="10" cy="15" r="2" fill="rgba(0, 0, 0, 0.6)"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Bottom Left School Additional Fish -->
+    <div class="fish-school fish-school-bl" style="bottom: 22%; left: 22%;">
+        <div class="koi-fish fish-swimming medium-fish" style="animation-delay: -3.5s;">
+            <svg viewBox="0 0 50 30">
+                <path d="M5 15 C15 5, 35 5, 45 15 C35 25, 15 25, 5 15" fill="rgba(255, 195, 175, 0.8)"/>
+                <path d="M45 15 L50 15 L45 20 L45 10 Z" fill="rgba(255, 195, 175, 0.8)"/>
+                <circle cx="10" cy="15" r="2" fill="rgba(0, 0, 0, 0.6)"/>
+            </svg>
+        </div>
+        <div class="koi-fish fish-swimming small-fish" style="animation-delay: -4s;">
+            <svg viewBox="0 0 50 30">
+                <path d="M5 15 C15 5, 35 5, 45 15 C35 25, 15 25, 5 15" fill="rgba(255, 185, 165, 0.8)"/>
+                <path d="M45 15 L50 15 L45 20 L45 10 Z" fill="rgba(255, 185, 165, 0.8)"/>
+                <circle cx="10" cy="15" r="2" fill="rgba(0, 0, 0, 0.6)"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Center School Additional Fish -->
+    <div class="fish-school fish-school-center" style="top: 48%; left: 48%;">
+        <div class="koi-fish fish-swimming medium-fish" style="animation-delay: -1s;">
+            <svg viewBox="0 0 50 30">
+                <path d="M5 15 C15 5, 35 5, 45 15 C35 25, 15 25, 5 15" fill="rgba(255, 175, 155, 0.8)"/>
+                <path d="M45 15 L50 15 L45 20 L45 10 Z" fill="rgba(255, 175, 155, 0.8)"/>
+                <circle cx="10" cy="15" r="2" fill="rgba(0, 0, 0, 0.6)"/>
+            </svg>
+        </div>
+        <div class="koi-fish fish-swimming large-fish" style="animation-delay: -1.5s;">
+            <svg viewBox="0 0 50 30">
+                <path d="M5 15 C15 5, 35 5, 45 15 C35 25, 15 25, 5 15" fill="rgba(255, 165, 145, 0.8)"/>
+                <path d="M45 15 L50 15 L45 20 L45 10 Z" fill="rgba(255, 165, 145, 0.8)"/>
+                <circle cx="10" cy="15" r="2" fill="rgba(0, 0, 0, 0.6)"/>
+            </svg>
+        </div>
+    </div>
+
+    <style>
+        /* Additional Fish Sizes */
+        .medium-fish {
+            transform: scale(1.1);
+        }
+        
+        /* Enhanced Fish Swimming Animation */
+        .fish-swimming {
+            animation: individualSwim 8s infinite ease-in-out;
+        }
+        
+        @keyframes individualSwim {
+            0%, 100% { transform: translateX(0) scaleX(1); }
+            25% { transform: translateX(10px) scaleX(-1); }
+            50% { transform: translateX(0) scaleX(1); }
+            75% { transform: translateX(-10px) scaleX(-1); }
+        }
+    </style>
+    <script>
+        function createFishRipple(fish) {
+            const fishRect = fish.getBoundingClientRect();
+            const x = (fishRect.left + fishRect.width / 2) / window.innerWidth;
+            const y = (fishRect.top + fishRect.height / 2) / window.innerHeight;
+
+            // Create subtle ripple effect
+            const ripple = document.createElement('div');
+            ripple.className = 'fish-ripple';
+            ripple.style.left = `${x * 100}%`;
+            ripple.style.top = `${y * 100}%`;
+            document.body.appendChild(ripple);
+
+            // Animate and remove ripple
+            anime({
+                targets: ripple,
+                scale: [0, 2],
+                opacity: [0.4, 0],
+                duration: 2000,
+                easing: 'easeOutExpo',
+                complete: () => ripple.remove()
+            });
+        }
+
+        // Add fish ripple styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .fish-ripple {
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                background: radial-gradient(circle, 
+                    rgba(255, 255, 255, 0.2) 0%, 
+                    rgba(255, 255, 255, 0.1) 50%, 
+                    transparent 70%);
+                border-radius: 50%;
+                pointer-events: none;
+                transform-origin: center;
+                z-index: 3;
+            }
+
+            .koi-fish {
+                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+                transition: transform 0.3s ease;
+            }
+
+            .koi-fish:hover {
+                transform: scale(1.1);
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Add ripple effect to fish movement
+        document.querySelectorAll('.koi-fish').forEach(fish => {
+            setInterval(() => {
+                if (Math.random() > 0.7) { // 30% chance to create ripple
+                    createFishRipple(fish);
+                }
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

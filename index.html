@@ -674,6 +674,57 @@
             0% { transform: scale(0.3); opacity: 0.6; }
             100% { transform: scale(1); opacity: 0; }
         }
+
+        /* SmartCup image styling and animation */
+        .smartcup-bg {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: -2.5rem;
+            margin-top: 0;
+            position: relative;
+            z-index: 2;
+        }
+        .smartcup-bg img {
+            width: 19vw; /* 5% smaller than 20vw */
+            max-width: 210px;
+            min-width: 90px;
+            transition: transform 0.4s cubic-bezier(.4,2,.6,1);
+            animation: cupFloat 3.5s ease-in-out infinite;
+            will-change: transform;
+            filter: drop-shadow(0 8px 32px rgba(125,184,154,0.18));
+        }
+        @keyframes cupFloat {
+            0%, 100% { transform: translateY(0) scale(1);}
+            50% { transform: translateY(-18px) scale(1.04);}
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 900px) {
+            .smartcup-bg img {
+                width: 26vw;
+                max-width: 150px;
+            }
+            .hero h1 {
+                font-size: clamp(2.2rem, 7vw, 4.5rem);
+            }
+        }
+        @media (max-width: 600px) {
+            .smartcup-bg img {
+                width: 38vw;
+                max-width: 110px;
+                min-width: 60px;
+            }
+            .hero h1 {
+                font-size: clamp(1.5rem, 10vw, 2.6rem);
+            }
+            .hero-content {
+                padding: 0.5rem;
+            }
+            .feature-badges {
+                gap: 0.7rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -691,10 +742,10 @@
                 <li><a href="#home" class="active">Home</a></li>
                 <li><a href="problem.html">Problem</a></li>
                 <li><a href="solution.html">Solution</a></li>
-                <li><a href="https://thebatman2007.github.io/Smart-Menstrual-Cup/main.html">Product</a></li>
+                <li><a href="product/index.html">Product</a></li>
                 <li><a href="app/index.html">App Demo</a></li>
-                <li><a href="ai.html">Artemis AI</a></li>
-                <li><a href="community.html" onclick="window.location.href='https://thebatman2007.github.io/Smart-Fem/'">Community</a></li>
+                <li><a href="artemis.html">Artemis AI</a></li>
+                <li><a href="app/index.html">Community</a></li>
 
             </ul>
         </div>
@@ -1545,7 +1596,7 @@
         @keyframes schoolSwimMR {
             0% { transform: translate(0, 0) scale(1); }
             50% { transform: translate(-200px, 50px) scale(1.1); }
-            100% { transform: translate(0, 0) scale(1); }
+                       100% { transform: translate(0, 0) scale(1); }
         }
     </style>
     <!-- Additional Fish for Each School -->

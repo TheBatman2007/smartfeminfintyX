@@ -75,10 +75,11 @@
       --poster-color: #ffffff;
     }
     .image-gallery {
-      display: flex;
-      justify-content: space-between;
-      margin: 4rem 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1.5rem;
+      margin: 4rem 0;
+      padding: 0 1rem;
     }
     .image-container {
       flex: 1;
@@ -86,15 +87,34 @@
       border-radius: 8px;
       overflow: hidden;
       transition: box-shadow 0.2s ease;
+      aspect-ratio: 4 / 3; /* Maintain consistent image proportions */
     }
     .image-container img {
       width: 100%;
-      height: auto;
+      height: 100%;
+      object-fit: cover; /* Ensure images fill the container without distortion */
       display: block;
       transition: transform 0.2s ease;
     }
     .image-container:hover {
       box-shadow: 0 1px 3px rgba(60,64,67,0.3), 0 4px 8px rgba(60,64,67,0.15);
+      transform: translateY(-2px); /* Subtle lift effect on hover */
+    }
+    .image-container:hover img {
+      transform: scale(1.05); /* Slight zoom effect on hover */
+    }
+    @media (max-width: 768px) {
+      .image-gallery {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .image-gallery {
+        grid-template-columns: 1fr; /* Single column on very small screens */
+        gap: 0.75rem;
+      }
     }
     footer {
       background-color: #f8f9fa;
@@ -388,10 +408,25 @@
     
     <div class="image-gallery">
       <div class="image-container">
-        <img src="image1c.jpg" alt="SmartFemX Infinity Image 1">
+        <img src="pcb1.jpg" alt="SmartFemX PCB Image 1">
       </div>
       <div class="image-container">
-        <img src="imagefc1.jpg" alt="SmartFemX Infinity Image 2">
+        <img src="pcb2.jpg" alt="SmartFemX PCB Image 2">
+      </div>
+      <div class="image-container">
+        <img src="pcb3.jpg" alt="SmartFemX PCB Image 3">
+      </div>
+      <div class="image-container">
+        <img src="pcb4.jpg" alt="SmartFemX PCB Image 4">
+      </div>
+      <div class="image-container">
+        <img src="pcb5.jpg" alt="SmartFemX PCB Image 5">
+      </div>
+      <div class="image-container">
+        <img src="pcb6.jpg" alt="SmartFemX PCB Image 6">
+      </div>
+      <div class="image-container">
+        <img src="pcb7.jpg" alt="SmartFemX PCB Image 7">
       </div>
     </div>
   </div>

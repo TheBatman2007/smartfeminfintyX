@@ -1,4 +1,4 @@
-🩸 Smart FemX — AI-Powered BioHealth Menstrual Intelligence System
+🩸 Smart FemX AI-Powered BioHealth Menstrual Intelligence System
 📘 Overview
 Smart FemX is an advanced AI-driven BioHealth ecosystem designed to revolutionize women’s menstrual and reproductive health. By integrating smart biosensors, AI prediction, and 3D protein visualization, Smart FemX goes beyond traditional period tracking. It transforms menstrual data into a molecular-level diagnostic and predictive system, bridging the gap between femtech and biomedical AI.
 Smart FemX empowers users to monitor, understand, and manage their menstrual health in real-time, providing early alerts for hormonal imbalances, infections, or nutrient deficiencies. Its ecosystem combines hardware, software, and AI for a seamless, intelligent, and user-friendly experience.
